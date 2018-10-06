@@ -1,0 +1,365 @@
+{
+   "in_reply_to_status_id_str": null,
+   "coordinates": null,
+   "in_reply_to_screen_name": null,
+   "created_at": "Fri Oct 05 15:40:23 +0000 2018",
+   "in_reply_to_status_id": null,
+   "retweeted": false,
+   "id": 1048236467934453763,
+   "lang": "und",
+   "quoted_status": {
+      "in_reply_to_status_id_str": null,
+      "coordinates": null,
+      "in_reply_to_screen_name": null,
+      "created_at": "Thu May 10 19:00:59 +0000 2018",
+      "in_reply_to_status_id": null,
+      "retweeted": false,
+      "id": 994653546518900736,
+      "extended_entities": {
+         "media": [
+            {
+               "video_info": {
+                  "aspect_ratio": [
+                     16,
+                     9
+                  ],
+                  "duration_millis": 65320,
+                  "variants": [
+                     {
+                        "url": "https://video.twimg.com/ext_tw_video/994651328155701248/pu/vid/640x360/f87NXFY1tNTcx-eS.mp4?tag=3",
+                        "content_type": "video/mp4",
+                        "bitrate": 832000
+                     },
+                     {
+                        "url": "https://video.twimg.com/ext_tw_video/994651328155701248/pu/vid/320x180/AkfUAjAUFuM7T8j0.mp4?tag=3",
+                        "content_type": "video/mp4",
+                        "bitrate": 256000
+                     },
+                     {
+                        "url": "https://video.twimg.com/ext_tw_video/994651328155701248/pu/vid/1280x720/PKAx_xbsoh4pBDAH.mp4?tag=3",
+                        "content_type": "video/mp4",
+                        "bitrate": 2176000
+                     },
+                     {
+                        "url": "https://video.twimg.com/ext_tw_video/994651328155701248/pu/pl/n3eGZiIld-xC7gLo.m3u8?tag=3",
+                        "content_type": "application/x-mpegURL"
+                     }
+                  ]
+               },
+               "id_str": "994651328155701248",
+               "media_url": "http://pbs.twimg.com/ext_tw_video_thumb/994651328155701248/pu/img/FjsNSU-lPboJOEfb.jpg",
+               "indices": [
+                  57,
+                  80
+               ],
+               "type": "video",
+               "media_url_https": "https://pbs.twimg.com/ext_tw_video_thumb/994651328155701248/pu/img/FjsNSU-lPboJOEfb.jpg",
+               "sizes": {
+                  "medium": {
+                     "h": 675,
+                     "resize": "fit",
+                     "w": 1200
+                  },
+                  "large": {
+                     "h": 720,
+                     "resize": "fit",
+                     "w": 1280
+                  },
+                  "thumb": {
+                     "h": 150,
+                     "resize": "crop",
+                     "w": 150
+                  },
+                  "small": {
+                     "h": 383,
+                     "resize": "fit",
+                     "w": 680
+                  }
+               },
+               "expanded_url": "https://twitter.com/baspiela/status/994653546518900736/video/1",
+               "url": "https://t.co/IvA3AkCIvo",
+               "id": 994651328155701248,
+               "additional_media_info": {
+                  "monetizable": false
+               },
+               "display_url": "pic.twitter.com/IvA3AkCIvo"
+            }
+         ]
+      },
+      "favorite_count": 2048,
+      "user": {
+         "listed_count": 14,
+         "profile_image_url_https": "https://pbs.twimg.com/profile_images/984936155408945162/lO26ilaV_normal.jpg",
+         "profile_image_url": "http://pbs.twimg.com/profile_images/984936155408945162/lO26ilaV_normal.jpg",
+         "friends_count": 10792,
+         "profile_background_image_url_https": null,
+         "created_at": "Sat Nov 26 13:23:40 +0000 2016",
+         "follow_request_sent": false,
+         "following": false,
+         "description": "Zamrażanie wizerunku",
+         "profile_sidebar_fill_color": "DDEEF6",
+         "id": 802503086417838080,
+         "lang": "pl",
+         "favourites_count": 31865,
+         "profile_background_tile": false,
+         "screen_name": "baspiela",
+         "statuses_count": 9675,
+         "has_extended_profile": false,
+         "url": null,
+         "profile_use_background_image": true,
+         "geo_enabled": false,
+         "is_translator": false,
+         "location": "",
+         "default_profile_image": false,
+         "name": "Barbara Piela",
+         "profile_sidebar_border_color": "C0DEED",
+         "contributors_enabled": false,
+         "verified": false,
+         "id_str": "802503086417838080",
+         "default_profile": true,
+         "is_translation_enabled": false,
+         "notifications": false,
+         "utc_offset": null,
+         "protected": false,
+         "profile_banner_url": "https://pbs.twimg.com/profile_banners/802503086417838080/1503168949",
+         "entities": {
+            "description": {
+               "urls": []
+            }
+         },
+         "followers_count": 11430,
+         "profile_background_color": "F5F8FA",
+         "profile_link_color": "1DA1F2",
+         "profile_background_image_url": null,
+         "profile_text_color": "333333",
+         "time_zone": null,
+         "translator_type": "none"
+      },
+      "place": null,
+      "in_reply_to_user_id_str": null,
+      "entities": {
+         "hashtags": [
+            {
+               "text": "KukiełkowyŚwiatBasi",
+               "indices": [
+                  0,
+                  20
+               ]
+            },
+            {
+               "text": "Plastusie",
+               "indices": [
+                  21,
+                  31
+               ]
+            },
+            {
+               "text": "Minęła20",
+               "indices": [
+                  32,
+                  41
+               ]
+            }
+         ],
+         "urls": [],
+         "media": [
+            {
+               "media_url_https": "https://pbs.twimg.com/ext_tw_video_thumb/994651328155701248/pu/img/FjsNSU-lPboJOEfb.jpg",
+               "sizes": {
+                  "medium": {
+                     "h": 675,
+                     "resize": "fit",
+                     "w": 1200
+                  },
+                  "large": {
+                     "h": 720,
+                     "resize": "fit",
+                     "w": 1280
+                  },
+                  "thumb": {
+                     "h": 150,
+                     "resize": "crop",
+                     "w": 150
+                  },
+                  "small": {
+                     "h": 383,
+                     "resize": "fit",
+                     "w": 680
+                  }
+               },
+               "expanded_url": "https://twitter.com/baspiela/status/994653546518900736/video/1",
+               "url": "https://t.co/IvA3AkCIvo",
+               "id_str": "994651328155701248",
+               "type": "photo",
+               "media_url": "http://pbs.twimg.com/ext_tw_video_thumb/994651328155701248/pu/img/FjsNSU-lPboJOEfb.jpg",
+               "indices": [
+                  57,
+                  80
+               ],
+               "display_url": "pic.twitter.com/IvA3AkCIvo",
+               "id": 994651328155701248
+            }
+         ],
+         "symbols": [],
+         "user_mentions": []
+      },
+      "lang": "pl",
+      "full_text": "#KukiełkowyŚwiatBasi #Plastusie #Minęła20\nHGW i Rafał T. https://t.co/IvA3AkCIvo",
+      "source": "<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client</a>",
+      "favorited": false,
+      "retweet_count": 907,
+      "truncated": false,
+      "id_str": "994653546518900736",
+      "possibly_sensitive": false,
+      "metadata": {
+         "iso_language_code": "und",
+         "result_type": "recent"
+      },
+      "geo": null,
+      "in_reply_to_user_id": null,
+      "contributors": null,
+      "display_text_range": [
+         0,
+         56
+      ],
+      "is_quote_status": false
+   },
+   "favorite_count": 1,
+   "user": {
+      "listed_count": 1,
+      "profile_image_url_https": "https://pbs.twimg.com/profile_images/1043243253313798144/lPqaCuTP_normal.jpg",
+      "profile_image_url": "http://pbs.twimg.com/profile_images/1043243253313798144/lPqaCuTP_normal.jpg",
+      "friends_count": 215,
+      "profile_background_image_url_https": "https://abs.twimg.com/images/themes/theme1/bg.png",
+      "created_at": "Thu Aug 27 20:04:42 +0000 2015",
+      "follow_request_sent": false,
+      "following": false,
+      "description": "I love Dave Mustaine. \nAll rights reserved. Mermaid with blue eyes. Blue magic. Blue kingdom. Blue album. Under the blue sky. 1 000 000 $.",
+      "profile_sidebar_fill_color": "000000",
+      "id": 3460979775,
+      "lang": "pl",
+      "favourites_count": 8943,
+      "profile_background_tile": false,
+      "screen_name": "InsurgentNow",
+      "statuses_count": 2510,
+      "has_extended_profile": true,
+      "url": null,
+      "profile_use_background_image": true,
+      "geo_enabled": false,
+      "is_translator": false,
+      "location": "Poland",
+      "default_profile_image": false,
+      "name": "LOLA🤟👑",
+      "profile_sidebar_border_color": "000000",
+      "contributors_enabled": false,
+      "verified": false,
+      "id_str": "3460979775",
+      "default_profile": false,
+      "is_translation_enabled": false,
+      "notifications": false,
+      "utc_offset": null,
+      "protected": false,
+      "profile_banner_url": "https://pbs.twimg.com/profile_banners/3460979775/1530276941",
+      "entities": {
+         "description": {
+            "urls": []
+         }
+      },
+      "followers_count": 85,
+      "profile_background_color": "9AE4E8",
+      "profile_link_color": "CC3300",
+      "profile_background_image_url": "http://abs.twimg.com/images/themes/theme1/bg.png",
+      "profile_text_color": "000000",
+      "time_zone": null,
+      "translator_type": "none"
+   },
+   "place": null,
+   "in_reply_to_user_id_str": null,
+   "quoted_status_id_str": "994653546518900736",
+   "entities": {
+      "hashtags": [
+         {
+            "text": "PusteObietnice",
+            "indices": [
+               0,
+               15
+            ]
+         },
+         {
+            "text": "KoalicjaObywatelska",
+            "indices": [
+               16,
+               36
+            ]
+         },
+         {
+            "text": "Trzaskowski",
+            "indices": [
+               37,
+               49
+            ]
+         },
+         {
+            "text": "Warszawa",
+            "indices": [
+               50,
+               59
+            ]
+         },
+         {
+            "text": "wieszwięcej",
+            "indices": [
+               60,
+               72
+            ]
+         },
+         {
+            "text": "WartoPodaćDalej",
+            "indices": [
+               73,
+               89
+            ]
+         },
+         {
+            "text": "weekend",
+            "indices": [
+               90,
+               98
+            ]
+         }
+      ],
+      "urls": [
+         {
+            "url": "https://t.co/Gx6WjdQNtB",
+            "expanded_url": "https://twitter.com/baspiela/status/994653546518900736",
+            "display_url": "twitter.com/baspiela/statu…",
+            "indices": [
+               99,
+               122
+            ]
+         }
+      ],
+      "symbols": [],
+      "user_mentions": []
+   },
+   "full_text": "#PusteObietnice #KoalicjaObywatelska #Trzaskowski #Warszawa #wieszwięcej #WartoPodaćDalej #weekend https://t.co/Gx6WjdQNtB",
+   "source": "<a href=\"http://twitter.com/download/android\" rel=\"nofollow\">Twitter for Android</a>",
+   "favorited": false,
+   "retweet_count": 0,
+   "truncated": false,
+   "id_str": "1048236467934453763",
+   "possibly_sensitive": false,
+   "metadata": {
+      "iso_language_code": "und",
+      "result_type": "recent"
+   },
+   "geo": null,
+   "in_reply_to_user_id": null,
+   "contributors": null,
+   "quoted_status_id": 994653546518900736,
+   "display_text_range": [
+      0,
+      98
+   ],
+   "is_quote_status": true
+}

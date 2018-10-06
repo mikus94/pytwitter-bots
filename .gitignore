@@ -1,0 +1,12 @@
+
+data/tags/#Trzaskowski/tweets/
+
+__pycache__/
+
+data/
+
+config\.py
+
+other/pt\.py
+
+other/others\.py
