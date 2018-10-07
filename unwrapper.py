@@ -31,6 +31,7 @@ def get_tweet(json):
 	"""
 	# check whetver tweet is tweet, retweet or quote tweet.
 	user = get_user(json)
+	tweet = get_tweet_data(json)
 	# retweet
 	if (json.get('retweeted_status', None) != None):
 		print("Retweet!")
@@ -38,25 +39,24 @@ def get_tweet(json):
 		retweeted = get_tweet_data(json.get('retweeted_status', {}))
 		date = parse_time(json.get('created_at', None))
 		retweet = {
+			'id'		: tweet['id'],
 			'tweet_id' 	: retweeted['id'],
-			'user'		: user['id'],
+			'user_id'		: user['id'],
 			'created_at': date
 		}
-		return ('retweet', (user, retweet))
+		return ('retweet', (user, tweet, retweet))
 	# quoted
 	elif (json.get('is_quote_status', False) == True):
 		print("Quote!")
-		tweet = get_tweet_data(json)
-		quoted_id = get_tweet_data(json.get('quoted_status', {}))
+		quoted_tweet = get_tweet_data(json.get('quoted_status', {}))
 		quoted = {
-			'tweet_id' 	: tweet['id'], 
-			'quoted_id' : quoted_id
+			'id' 		: tweet['id'],
+			'quoted' 	: quoted_tweet
 		}
 		return ('quote', (user, tweet, quoted))
 	# regular tweet
 	else:
 		print("Tweet!")
-		tweet = get_tweet_data(json)
 		return ('tweet', (user, tweet))
 
 def get_tweet_data(json):
@@ -72,7 +72,10 @@ def get_tweet_data(json):
 	tweet['created_at'] = parse_time(json['created_at'])
 	tweet['tweet'] = json.get('full_text', '')
 	tweet['lang'] = json.get('lang', '')
-	tweet['place'] = json.get('place', '')
+	if json.get('place', None) != None:
+		tweet['place'] = json['place'].get('full_name', '')
+	else:
+		tweet['place'] = ''
 
 	tweet['retweet_count'] = json.get('retweet_count', 0)
 	tweet['favourites_count'] = json.get('favourites_count', 0)
