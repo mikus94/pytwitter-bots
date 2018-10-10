@@ -1,12 +1,9 @@
 
-data/tags/#Trzaskowski/tweets/
+# documentation htmls
+build/
 
-__pycache__/
+# pycache
+src/__pycache__
 
-data/
-
-config\.py
-
-other/pt\.py
-
-other/others\.py
+# data
+src/data*

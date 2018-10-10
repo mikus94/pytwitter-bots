@@ -1,0 +1,13 @@
+# naliczniejsze hasztagi
+select tag, count(tag) from hashtag group by tag order by count(tag) desc;
+
+
+# najliczniejsze media
+select link, type, count(link) from media group by link, type order by count(link) desc;
+
+
+# najwiecej linkow
+select link, count(link) from urls group by link order by count(link) desc;
+
+# najwiecej mentions
+select m.user_id, tu.screen_name, count(m.user_id) from mentions as m, twitter_user as tu where m.user_id=tu.id group by m.user_id, tu.screen_name order by count(m.user_id) desc;
