@@ -11,7 +11,7 @@ CREATE TABLE twitter_user (
     statuses_count                  integer NOT NULL,
     followers_count                 integer NOT NULL,
     friends_count                   integer NOT NULL,
-    favourites_count                integer NOT NULL,
+    favourites_count                 integer NOT NULL,
     listed_count                    integer NOT NULL,
     geo_enabled                     boolean NOT NULL,
     verified                        boolean NOT NULL,
@@ -50,14 +50,16 @@ CREATE TABLE tweet (
     -- # of retweets
     retweet_count                   integer NOT NULL,
     -- # of times that tweet was added to favourites
-    favourites_count                integer NOT NULL,
+    favorite_count                integer NOT NULL,
     -- lang of tweet
     lang                            varchar(5),
     -- id of user that posted the tweet
     user_id                         bigint NOT NULL,
     -- geo information of tweet posting
     place                           text,
-    PRIMARY KEY (id)
+
+    version                         date NOT NULL,
+    PRIMARY KEY (id, version)
 );
 
 -- table storing hashtags in tweets
