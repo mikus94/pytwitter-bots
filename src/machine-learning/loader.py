@@ -13,10 +13,10 @@ import numpy as np
 import sklearn
 
 # path to data from DB
-USER_DATA_PATH = '/home/miko/msc/trollemagisterka/src/data-collection/data/users.csv'
+USER_DATA_PATH = '/home/miko/msc/trollemagisterka/src/users.csv'
 
 # path do cresci data
-CRESCI_DATA = '/home/miko/msc/cresci-2017.csv/datasets_full.csv'
+CRESCI_DATA = '/home/miko/msc/allData/ml_datasets/cresci-2017.csv/datasets_full.csv'
 
 # fields needed to classifier
 DESIRED_FIELDS = ["id", "statuses_count", "followers_count", "friends_count",
@@ -24,6 +24,11 @@ DESIRED_FIELDS = ["id", "statuses_count", "followers_count", "friends_count",
                     "geo_enabled", "profile_use_background_image", "verified",
                     "protected"
 ]
+
+FEATURE_COLS = {}
+for f, i in zip(DESIRED_FIELDS, range(len(DESIRED_FIELDS))):
+    FEATURE_COLS[f] = i
+FEATURE_COLS['activity'] = len(DESIRED_FIELDS)
 
 def convert_bool(cbool):
     """
@@ -39,7 +44,37 @@ def str2date(x):
     """
     Convert date to numpy format.
     """
-    return (datetime.datetime.strptime(x.decode("utf-8"), '%Y-%m-%d %H:%M:%S'))
+    try:
+        res = datetime.datetime.strptime(x.decode("utf-8"), '%Y-%m-%d %H:%M:%S')
+    except AttributeError:
+        res = datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S')
+    return res
+
+def str2day(x):
+    """
+    Convert date to numpy format.
+    """
+    return (datetime.datetime.strptime(x.decode("utf-8"), '%Y-%m-%d'))
+    
+
+def get_active_days(data, indices):
+    """
+    Function getting active days of users.
+
+    """
+    dates_data = data[:, date_indices]
+    # make vectorized function
+    str2date_vect = np.vectorize(str2date)
+    dates_data = str2date_vect(dates_data)
+    # timedelta
+    dates_data = dates_data[:,1] - dates_data[:,0]
+    # function extracting days from datetime.deltatime object
+    days_vect = np.vectorize(lambda x: x.days)
+    # result
+    dates_data = days_vect(dates_data)
+    # reshape from ((X, )) to ((X, 1))
+    dates_data = dates_data.reshape((len(data), 1))
+
 
 def load_csv_np(filename):
     """
@@ -240,10 +275,34 @@ def get_columns(which, data):
         print("WRONG DATASET NAME!!!! Given " + which)
         exit()
 
+    # extract days that account was active
+    # get columns created_at and when was it crawled
+    dates_indices = [ 
+            # column timestamp correspond to created_at column.
+            # it is the same date saved in timestamp format
+            data_indecies.index(d) for d in ["timestamp", "crawled_at"]
+        ]
+    dates_data = data[:, dates_indices]
+    # make vectorized function
+    str2date_vect = np.vectorize(str2date)
+    dates_data = str2date_vect(dates_data)
+    # timedelta
+    dates_data = dates_data[:,1] - dates_data[:,0]
+    # function extracting days from datetime.deltatime object
+    days_vect = np.vectorize(lambda x: x.days)
+    # result
+    dates_data = days_vect(dates_data)
+    # reshape from ((X, )) to ((X, 1))
+    dates_data = dates_data.reshape((len(data), 1))
+
+    # get data desired
     indecies = [ data_indecies.index(d) for d in DESIRED_FIELDS ]
     data = data[:, indecies ]
+    # fill missing data
     data[data==''] = '0'
     data[data=='NULL'] = '0'
+    # concatenate active days data with data
+    data = np.concatenate((data, dates_data), axis=1)
     data = data.astype(int)
     return data
 
@@ -258,7 +317,7 @@ def load_my_users():
             fname=USER_DATA_PATH,
             delimiter=',',
             # usecols=[0, 1, 2,3,4,5,6,7,8,9,10,11,12,13],
-            usecols=[i for i in range(14)],
+            usecols=[i for i in range(15)],
             dtype=[
                 np.dtype(int),
                 np.dtype('U20'),
@@ -275,7 +334,7 @@ def load_my_users():
                 np.dtype(bool),
                 np.dtype(bool),
                 np.dtype(bool),
-                np.dtype('M')
+                np.dtype('U20')
             ],
             # skiprows=1,
             names=True,
@@ -288,12 +347,21 @@ def load_my_users():
                 11: convert_bool,
                 12: convert_bool,
                 13: convert_bool,
-                14: str2date
+                14: str2day
             }
     )
-
     # users labels
     users_labels = np.asarray([ (u[0], u[1], u[2]) for u in my_users ])
+
+    time_delta = np.asarray([
+        [
+            str2date(u[i]) for i in [1,14]
+        ]
+        for u in my_users
+    ])
+    time_delta = time_delta[:, 1] - time_delta[:, 0]
+    time_delta = np.vectorize(lambda x: x.days)(time_delta)
+    time_delta = time_delta.reshape((len(time_delta), 1))
     # users data
     # obtain fields needed to classifier
     my_users = np.asarray([
@@ -302,6 +370,8 @@ def load_my_users():
         ]
         for u in my_users
     ])
+    my_users = np.concatenate((my_users, time_delta), axis=1)
+    my_users.astype(int)
     return (users_labels, my_users)
 
 def load_cresci_users(desired):
@@ -328,6 +398,7 @@ def load_cresci_users(desired):
         set_path = os.path.join(CRESCI_DATA, cresci_sets[name], 'users.csv')
         _, data = load_csv_np(set_path)
         data = get_columns(name, data)
+        data.astype(int)
         return data
 
     # result
@@ -336,3 +407,12 @@ def load_cresci_users(desired):
     for d in desired:
         res[d] = load_one(d)
     return res
+
+
+def add_retweet_ratio(data):
+    """
+    Adding retweet ratio column.
+    :param data: Data.
+    """
+    
+    pass

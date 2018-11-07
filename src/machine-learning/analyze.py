@@ -11,6 +11,7 @@ import os
 import datetime 
 import csv
 import numpy as np
+np.set_printoptions(suppress=True)
 
 import sklearn
 from sklearn.preprocessing import MinMaxScaler
@@ -21,6 +22,9 @@ from sklearn import svm
 
 
 import loader
+
+# CV
+CV_NO = 10
 
 """
 I ASSUME THAT 1 INDICATES BOT!!!!
@@ -75,8 +79,9 @@ bots = np.concatenate(
 )
 
 _, bots = split_labels(bots)
-
 _, humans = split_labels(humans)
+# print(humans)
+# exit()
 
 # humans = normalize(humans)
 # bots = normalize(bots)
@@ -92,57 +97,60 @@ b = add_y(b, 1)
 
 
 
-# CV
-cv_no = 10
-h_len = len(h) / cv_no
-b_len = len(b) / cv_no
-print("data len")
-print(len(h))
-print(len(b))
 
-batches = {}
-for i in range(cv_no):
-    start_h = int(i * h_len)
-    end_h = int((i+1) * h_len )
-    start_b = int(i * b_len)
-    end_b = int((i+1) * b_len)
-    # batch
-    if i != cv_no - 1:
-        hs = h[start_h:end_h]
-        bs = b[start_b:end_b]
-        batch = np.r_[bs, hs]
-    else:
-        hs = h[start_h:]
-        bs = b[start_b:]
-        batch = np.r_[bs, hs]
-    batch = shuffle(batch)
-    batches[str(i)] = batch
+def make_batches(data, no_batches):
+    """
+    Generate no_batches of data.
+    """
+    def make_batch_indecies(start_p, length, step):
+        """
+        Making batch indecies
+        """
+        return [ i for i in range(start_p, length, step)]
+
+    indecies = []
+    for i in range(no_batches):
+        idx = make_batch_indecies(i, len(data), no_batches)
+        indecies.append(idx)
+    batches = []
+    for idxes in indecies:
+        batches.append(data[idxes])
+    return batches
+
+batches_b = make_batches(b, CV_NO)
+batches_h = make_batches(h, CV_NO)
+
+# concat data
+batches_b = shuffle(batches_b)
+batches_h = shuffle(batches_h)
+
+batches = []
+for bb, hh in zip(batches_b, batches_h):
+    # concat humnas with bots
+    concat = np.concatenate((bb, hh), axis=0)
+    # shuffle them inside batch
+    np.random.shuffle(concat)
+    # add batch
+    batches.append(concat)
 
 
-# for k,v in batches.items():
-#     print(k)
-#     print(len(v))
 
 def get_cv_data(batches, no):
-    # if no == 0:
-    #     train = batches[str(cv_no-1)]
-    # else:
-    #     train = batches['0']
-    # for i in range(1,cv_no-1):
-    #     if i != no:
-    #         train = np.r_[train, batches[str(i)]]
-    ttt = [i for i in range(cv_no)]
+    ttt = [i for i in range(CV_NO)]
     ttt.pop(no)
-    # print(ttt)
-    bbb = [ batches[str(i)] for i in ttt ]
+    bbb = [ batches[i] for i in ttt ]
     train = np.concatenate(bbb, axis=0)
-    # print(train.shape)
-    tr_x = train[:,:10]
-    tr_y = train[:,10:].astype(int).flatten()
+    # placement of label
+    # batch[0] - is batch
+    # batch[0][0] - is element of batch
+    label_place = len(batches[0][0]) - 1
+    tr_x = train[:,:label_place]
+    tr_y = train[:,label_place:].astype(int).flatten()
     tr_y = np.reshape(tr_y, (len(tr_y),))
-    test = batches[str(no)]
-    ts_x = test[:,:10]
-    ts_y = test[:,10:].astype(int).flatten()
+    # test dataset
+    test = batches[no]
+    ts_x = test[:,:label_place]
+    ts_y = test[:,label_place:].astype(int).flatten()
     ts_y = np.reshape(ts_y, (len(ts_y),))
     return tr_x, tr_y, ts_x, ts_y
 
@@ -150,13 +158,11 @@ scores = []
 log_opts = {
     'max_iter': 500,
     'penalty': 'l2',
-    'solver': 'liblinear'
-    # 'solver': 'lbfgs'
+    # 'solver': 'liblinear'
+    'solver': 'lbfgs'
 }
-for i in range(cv_no):
+for i in range(CV_NO):
     tr_x, tr_y, ts_x, ts_y = get_cv_data(batches, i)
-    # print(tr_x.shape)
-    # print(tr_y.shape)
     # print(tr_y)
     clf = LogisticRegression(**log_opts)
     # clf = svm.LinearSVC()
@@ -164,27 +170,40 @@ for i in range(cv_no):
     sc = clf.score(ts_x, ts_y)
     scores.append(sc)
 
-print("\nMean of " + str(cv_no) + "-Cross-Validation.")
+print("\nMean of " + str(CV_NO) + "-Cross-Validation.")
 print(np.mean(scores))
+
+
 clf = LogisticRegression(**log_opts)
 # clf = svm.LinearSVC()
-# load whole training data for classifier
-train_data = np.concatenate([batches[str(i)] for i in range(cv_no)])
-train_x = train_data[:,:10]
-train_y = np.reshape(train_data[:,10:].flatten(), (len(train_data),))
 
+# load whole training data for classifier
+train_data = np.concatenate([batches[i] for i in range(CV_NO)])
+label_place = len(batches[0][0]) - 1
+train_x = train_data[:,:label_place]
+train_y = np.reshape(train_data[:,label_place:].flatten(), (len(train_data),))
+
+# train
 clf = clf.fit(train_x, train_y)
 
-ds = 0
+# predict
 predicts = clf.predict(my_users_data)
+
+# save
+ds = 0
 with open('boty.txt', 'w') as f:
-    for label, pred in zip(my_users_labels, predicts):
+    for label, udata, pred in zip(my_users_labels, my_users_data, predicts):
         if int(pred) == 1:
             ds += 1
             f.write(str(label))
+            # f.write(str(udata))
             f.write('\n')
 
+print('\n==========================')
 print('Liczba botow')
 print(ds)
 print('na wszystkich uzytkownikow')
 print(len(my_users_data))
+print('Procent botow')
+print(ds/len(my_users_data))
+print('==========================')
