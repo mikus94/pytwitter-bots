@@ -13,9 +13,9 @@ import datetime
 from .tools import *
 from configs.db_config import *
 
-def get_user(json):
+def get_user(author_json):
     """
-    Getting user info out of tweet.
+    Getting user info out of user json.
     Extracting information beeing used in following analizys.
     :param json: Tweet JSON which contains user informations.
     :returns: Shortened JSON of following structure.
@@ -48,7 +48,6 @@ def get_user(json):
 
     }
     """
-    author_json = json['user']
     author = {}
     author_dsc = {}
 

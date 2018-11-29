@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="98258083-10a8-450f-992b-a2994e0ac438" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../requirements2.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../selects" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data-collection/configs/data_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/data-collection/configs/data_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data-collection/configs/db_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/data-collection/configs/db_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data-collection/extractor.py" beforeDir="false" afterPath="$PROJECT_DIR$/data-collection/extractor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data-collection/handlers/unwrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/data-collection/handlers/unwrapper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data-collection/handlers/user_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data-collection/handlers/user_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data-collection/storage/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/data-collection/storage/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data-collection/storage/multi.py" beforeDir="false" afterPath="$PROJECT_DIR$/data-collection/storage/multi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine-learning/analyze.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine-learning/analyze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/machine-learning/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/machine-learning/loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/create_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/create_db.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/get_newest_users.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/newest_users_csv.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/newest_users_csv.sql" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="79" />
+    <option name="y" value="28" />
+    <option name="width" value="1566" />
+    <option name="height" value="1016" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane" />
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="98258083-10a8-450f-992b-a2994e0ac438" name="Default Changelist" comment="" />
+      <created>1543345435437</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1543345435437</updated>
+      <workItem from="1543345438347" duration="182000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="182000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="44" y="22" width="1636" height="1028" extended-state="6" />
+    <layout>
+      <window_info id="Favorites" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21267252" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Python Console" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="SciView" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+</project>

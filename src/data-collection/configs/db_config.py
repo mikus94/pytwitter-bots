@@ -3,7 +3,6 @@
 Author: Mikolaj Gagatek
 Masters Degree Thesis application.
 """
-import datetime
 
 from .tools import *
 
@@ -75,6 +74,28 @@ USR_DSC_FIELDS = [
     ('lang', '', _FUNC_ID_),
     ('version', _TODAY, _FUNC_ID_)
 ]
+
+# varol data
+VAROL_USR_TABLE = 'varol_user'
+VAROL_USR_FIELDS = [
+    ('id', 0, _FUNC_INT_),
+    ('created_at', '1994-01-01', _FUNC_DATE_),
+    ('screen_name', 'XXX', _FUNC_ID_),
+    ('statuses_count', 0, _FUNC_INT_),
+    ('followers_count', 0, _FUNC_INT_),
+    ('friends_count', 0, _FUNC_INT_),
+    ('favourites_count', 0, _FUNC_INT_),
+    ('listed_count', 0, _FUNC_INT_),
+    ('geo_enabled', False, _FUNC_ID_),
+    ('verified', False, _FUNC_ID_),
+    ('protected', False, _FUNC_ID_),
+    ('default_profile', True, _FUNC_ID_),
+    ('profile_use_background_image', True, _FUNC_ID_),
+    ('default_profile_image', True, _FUNC_ID_),
+    ('version', _TODAY, _FUNC_ID_),
+    ('bot', False, _FUNC_ID_)
+]
+
 
 # hashtags
 HASH_TABLE = 'hashtag'

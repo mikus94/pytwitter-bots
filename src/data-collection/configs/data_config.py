@@ -11,7 +11,12 @@ import datetime
 PWD = os.path.abspath(os.path.dirname(__file__))
 DATA_COLLECTION_DIR = os.path.split(PWD)[0]
 SRC_PATH = os.path.split(DATA_COLLECTION_DIR)[0]
+# data is located at the same level as git repository
+SRC_PATH = os.path.split(os.path.split(SRC_PATH)[0])[0]
 
+
+# todays date@time
+TODAY = str(datetime.date.today()) + "@" + str(datetime.datetime.today().time())
 # create paths
 # path to data
 DATA = os.path.join(SRC_PATH, 'data')
@@ -27,6 +32,3 @@ RAW_DATA = os.path.join(DATA, 'raw')
 TAGS_PATH = os.path.join(DATA, 'tags')
 # logs
 LOG_PATH = os.path.join(DATA, 'logs')
-
-# todays date@time
-TODAY = str(datetime.date.today()) + "@" + str(datetime.datetime.today().time())

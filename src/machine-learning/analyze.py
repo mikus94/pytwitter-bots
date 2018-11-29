@@ -58,19 +58,41 @@ def normalize(data):
     return scaler.fit_transform(data)
 
 # cresci datasets to get
-cresci_users = ['humans', 'social1', 'social2', 'traditional1', 'traditional2']
+# cresci_users = ['humans', 'social1', 'social2', 'traditional1', 'traditional2']
+cresci_users = [
+    'humans'
+    # ,'social1'
+    ,'social2'
+    ,'social3'
+    ,'traditional1'
+    ,'traditional2'
+    ,'traditional3'
+    # ,'traditional4'
+    # 'fake'
+]
 
 # cresci data laoding
 cresci_data = loader.load_cresci_users(cresci_users)
 
 # my collected data loading
-(my_users_labels, my_users_data) = loader.load_my_users()
+(my_users_labels, my_users_data) = loader.load_exported_users('election')
 my_users_data = my_users_data[:,1:]
 # my_users_data = normalize(my_users_data[:,1:])
 
+# getting varol users data.
+(varol_users_labels, varol_users_data) = loader.load_exported_users('varol')
+# split varol data at bots and humans
+varol_bots = varol_users_data[varol_users_labels[:,3] == 'True']
+varol_humans = varol_users_data[varol_users_labels[:,3] == 'False']
+
+# STUPID IDEA ITS MIXED?
+# varol_humans = varol_users_data[varol_users_labels[:,3] == 'True']
+# varol_bots = varol_users_data[varol_users_labels[:,3] == 'False']
+
+# get humans data.
 humans = cresci_data['humans']
 
-
+# just cresci bots
 bots = np.concatenate(
     [
         cresci_data[cresci_users[i]] 
@@ -78,10 +100,19 @@ bots = np.concatenate(
     ]
 )
 
+# with varol data
+print("Boty\nCresci: {}\nVarol:{}\n".format(len(bots), len(varol_bots)))
+print("Humany\nCresci: {}\nVarol:{}".format(len(humans), len(varol_humans)))
+
+# bots = varol_bots
+# humans = varol_humans
+# bots = np.concatenate([bots, varol_bots])
+humans = np.concatenate([humans, varol_humans])
+
+
+print("\n\nUzyte\nBoty: {}\nHumany: {}".format(len(bots), len(humans)))
 _, bots = split_labels(bots)
 _, humans = split_labels(humans)
-# print(humans)
-# exit()
 
 # humans = normalize(humans)
 # bots = normalize(bots)
@@ -154,56 +185,71 @@ def get_cv_data(batches, no):
     ts_y = np.reshape(ts_y, (len(ts_y),))
     return tr_x, tr_y, ts_x, ts_y
 
-scores = []
+def make_cv(clf, opts={}):
+    scores = []
+    for i in range(CV_NO):
+        tr_x, tr_y, ts_x, ts_y = get_cv_data(batches, i)
+        # print(tr_y)
+        # clf = LogisticRegression(**log_opts)
+        clf = clf.set_params(**opts)
+        clf = clf.fit(tr_x, tr_y)
+        sc = clf.score(ts_x, ts_y)
+        scores.append(sc)
+
+    print("Mean of " + str(CV_NO) + "-Cross-Validation.")
+    print(np.mean(scores))
+
+
+def classify(clf, opts={}):
+    clf = clf.set_params(**opts)
+
+    # load whole training data for classifier
+    train_data = np.concatenate([batches[i] for i in range(CV_NO)])
+    label_place = len(batches[0][0]) - 1
+    train_x = train_data[:,:label_place]
+    train_y = np.reshape(train_data[:,label_place:].flatten(), (len(train_data),))
+
+    # train
+    clf = clf.fit(train_x, train_y)
+
+    # predict
+    predicts = clf.predict(my_users_data)
+
+    # save
+    ds = 0
+    with open('boty.txt', 'w') as f:
+        for label, udata, pred in zip(my_users_labels, my_users_data, predicts):
+            if int(pred) == 1:
+                ds += 1
+                f.write(str(label))
+                # f.write(str(udata))
+                f.write('\n')
+
+    print('\n==========================')
+    print('Liczba botow')
+    print(ds)
+    print('na wszystkich uzytkownikow')
+    print(len(my_users_data))
+    print('Procent botow')
+    print(ds/len(my_users_data))
+    print('==========================')
+
+
+# clf = svm.LinearSVC()
+# clf = LogisticRegression()
 log_opts = {
     'max_iter': 500,
     'penalty': 'l2',
     # 'solver': 'liblinear'
     'solver': 'lbfgs'
 }
-for i in range(CV_NO):
-    tr_x, tr_y, ts_x, ts_y = get_cv_data(batches, i)
-    # print(tr_y)
-    clf = LogisticRegression(**log_opts)
-    # clf = svm.LinearSVC()
-    clf = clf.fit(tr_x, tr_y)
-    sc = clf.score(ts_x, ts_y)
-    scores.append(sc)
 
-print("\nMean of " + str(CV_NO) + "-Cross-Validation.")
-print(np.mean(scores))
+clfs = [
+    (LogisticRegression(), log_opts, 'LogisitcRegression'),
+    # (svm.LinearSVC(), {'max_iter': 10000}, 'SVM - LinearSVC')
+]
 
-
-clf = LogisticRegression(**log_opts)
-# clf = svm.LinearSVC()
-
-# load whole training data for classifier
-train_data = np.concatenate([batches[i] for i in range(CV_NO)])
-label_place = len(batches[0][0]) - 1
-train_x = train_data[:,:label_place]
-train_y = np.reshape(train_data[:,label_place:].flatten(), (len(train_data),))
-
-# train
-clf = clf.fit(train_x, train_y)
-
-# predict
-predicts = clf.predict(my_users_data)
-
-# save
-ds = 0
-with open('boty.txt', 'w') as f:
-    for label, udata, pred in zip(my_users_labels, my_users_data, predicts):
-        if int(pred) == 1:
-            ds += 1
-            f.write(str(label))
-            # f.write(str(udata))
-            f.write('\n')
-
-print('\n==========================')
-print('Liczba botow')
-print(ds)
-print('na wszystkich uzytkownikow')
-print(len(my_users_data))
-print('Procent botow')
-print(ds/len(my_users_data))
-print('==========================')
+for clf, opts, name in clfs:
+    print("\nClassification with {}.".format(name))
+    make_cv(clf, opts)
+    classify(clf, opts)

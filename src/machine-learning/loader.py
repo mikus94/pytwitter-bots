@@ -10,13 +10,8 @@ import os
 import datetime
 import csv
 import numpy as np
-import sklearn
 
-# path to data from DB
-USER_DATA_PATH = '/home/miko/msc/trollemagisterka/src/users.csv'
-
-# path do cresci data
-CRESCI_DATA = '/home/miko/msc/allData/ml_datasets/cresci-2017.csv/datasets_full.csv'
+from .config import *
 
 # fields needed to classifier
 DESIRED_FIELDS = ["id", "statuses_count", "followers_count", "friends_count",
@@ -57,23 +52,22 @@ def str2day(x):
     return (datetime.datetime.strptime(x.decode("utf-8"), '%Y-%m-%d'))
     
 
-def get_active_days(data, indices):
-    """
-    Function getting active days of users.
-
-    """
-    dates_data = data[:, date_indices]
-    # make vectorized function
-    str2date_vect = np.vectorize(str2date)
-    dates_data = str2date_vect(dates_data)
-    # timedelta
-    dates_data = dates_data[:,1] - dates_data[:,0]
-    # function extracting days from datetime.deltatime object
-    days_vect = np.vectorize(lambda x: x.days)
-    # result
-    dates_data = days_vect(dates_data)
-    # reshape from ((X, )) to ((X, 1))
-    dates_data = dates_data.reshape((len(data), 1))
+# def get_active_days(data, indices):
+#     """
+#     Function getting active days of users.
+#     """
+#     dates_data = data[:, date_indices]
+#     # make vectorized function
+#     str2date_vect = np.vectorize(str2date)
+#     dates_data = str2date_vect(dates_data)
+#     # timedelta
+#     dates_data = dates_data[:,1] - dates_data[:,0]
+#     # function extracting days from datetime.deltatime object
+#     days_vect = np.vectorize(lambda x: x.days)
+#     # result
+#     dates_data = days_vect(dates_data)
+#     # reshape from ((X, )) to ((X, 1))
+#     dates_data = dates_data.reshape((len(data), 1))
 
 
 def load_csv_np(filename):
@@ -103,19 +97,19 @@ def get_columns(which, data):
     Getting desired columns out of Cresci data
     """
     # genuine accounts data
-    genuine = ["id","name","screen_name","statuses_count","followers_count",
-                "friends_count","favourites_count","listed_count","url","lang",
-                "time_zone","location","default_profile",
-                "default_profile_image","geo_enabled","profile_image_url",
-                "profile_banner_url","profile_use_background_image",
-                "profile_background_image_url_https","profile_text_color",
-                "profile_image_url_https","profile_sidebar_border_color",
-                "profile_background_tile","profile_sidebar_fill_color",
-                "profile_background_image_url","profile_background_color",
-                "profile_link_color","utc_offset","is_translator",
-                "follow_request_sent","protected","verified","notifications",
-                "description","contributors_enabled","following","created_at",
-                "timestamp","crawled_at","updated","test_set_1","test_set_2"
+    genuine = ["id", "name", "screen_name", "statuses_count", "followers_count",
+                "friends_count", "favourites_count", "listed_count", "url", "lang",
+                "time_zone", "location", "default_profile",
+                "default_profile_image", "geo_enabled", "profile_image_url",
+                "profile_banner_url", "profile_use_background_image",
+                "profile_background_image_url_https", "profile_text_color",
+                "profile_image_url_https", "profile_sidebar_border_color",
+                "profile_background_tile", "profile_sidebar_fill_color",
+                "profile_background_image_url", "profile_background_color",
+                "profile_link_color", "utc_offset", "is_translator",
+                "follow_request_sent", "protected", "verified", "notifications",
+                "description", "contributors_enabled", "following", "created_at",
+                "timestamp", "crawled_at", "updated", "test_set_1", "test_set_2"
     ]
     # social_spambots1
     social_spambots1 = ["id","name","screen_name","statuses_count",
@@ -254,6 +248,21 @@ def get_columns(which, data):
                             "description","contributors_enabled","following",
                             "created_at","timestamp","crawled_at","updated"
     ]
+    # fake followers
+    fake_followers = [
+        "id","name","screen_name","statuses_count","followers_count",
+        "friends_count","favourites_count","listed_count","created_at","url",
+        "lang","time_zone","location","default_profile","default_profile_image",
+        "geo_enabled","profile_image_url","profile_banner_url",
+        "profile_use_background_image","profile_background_image_url_https",
+        "profile_text_color","profile_image_url_https",
+        "profile_sidebar_border_color","profile_background_tile",
+        "profile_sidebar_fill_color","profile_background_image_url",
+        "profile_background_color","profile_link_color","utc_offset",
+        "is_translator","follow_request_sent","protected","verified",
+        "notifications","description","contributors_enabled","following",
+        "updated"
+    ]
     data_indecies = []
     if which == 'humans':
         data_indecies = genuine
@@ -271,6 +280,8 @@ def get_columns(which, data):
         data_indecies = traditional_spambots3
     elif which == 'traditional4':
         data_indecies = traditional_spambots4
+    elif which == 'fake':
+        data_indecies = fake_followers
     else:
         print("WRONG DATASET NAME!!!! Given " + which)
         exit()
@@ -287,38 +298,37 @@ def get_columns(which, data):
     str2date_vect = np.vectorize(str2date)
     dates_data = str2date_vect(dates_data)
     # timedelta
-    dates_data = dates_data[:,1] - dates_data[:,0]
+    times_delta = dates_data[:,1] - dates_data[:,0]
     # function extracting days from datetime.deltatime object
     days_vect = np.vectorize(lambda x: x.days)
     # result
-    dates_data = days_vect(dates_data)
+    times_delta = days_vect(times_delta)
     # reshape from ((X, )) to ((X, 1))
-    dates_data = dates_data.reshape((len(data), 1))
+    times_delta = times_delta.reshape((len(data), 1))
 
     # get data desired
-    indecies = [ data_indecies.index(d) for d in DESIRED_FIELDS ]
-    data = data[:, indecies ]
+    indecies = [data_indecies.index(d) for d in DESIRED_FIELDS]
+    data = data[:,indecies]
     # fill missing data
     data[data==''] = '0'
     data[data=='NULL'] = '0'
     # concatenate active days data with data
-    data = np.concatenate((data, dates_data), axis=1)
+    data = np.concatenate((data, times_delta), axis=1)
     data = data.astype(int)
     return data
 
-def load_my_users():
+def load_exported_users(which_users):
+    """
+    Loads my data exported from database to csv file.
+    """
     # get data from csv (my tt data)
     # skip_header - skip header number of lines
     # names - indicate line after skip row containing names of columns
     # exclude_list - list of columns to skip
     # fname - file path
     # 8 - 13 t,fa 
-    my_users = np.genfromtxt(
-            fname=USER_DATA_PATH,
-            delimiter=',',
-            # usecols=[0, 1, 2,3,4,5,6,7,8,9,10,11,12,13],
-            usecols=[i for i in range(15)],
-            dtype=[
+
+    csv_dtype = [
                 np.dtype(int),
                 np.dtype('U20'),
                 # np.dtype(datetime.datetime), # date of creation account (STRING)
@@ -335,11 +345,9 @@ def load_my_users():
                 np.dtype(bool),
                 np.dtype(bool),
                 np.dtype('U20')
-            ],
-            # skiprows=1,
-            names=True,
-            # excludelist=['version'],
-            converters={
+    ]
+
+    csv_converters = {
                 1: str2date,
                 8: convert_bool,
                 9: convert_bool,
@@ -348,10 +356,37 @@ def load_my_users():
                 12: convert_bool,
                 13: convert_bool,
                 14: str2day
-            }
+    }
+    fname = ''
+    no_cols = 1
+    if which_users == 'election':
+        fname = USER_DATA_PATH
+        no_cols = 15
+    elif which_users == 'varol':
+        fname = VAROL_USER_DATA_PATH
+        no_cols = 16
+        csv_dtype.append(np.dtype(bool))
+        csv_converters[15] = convert_bool
+    else:
+        print("ERROR!")
+        print("WRONG TYPE OF DATA TO LOAD!")
+        exit()
+
+    my_users = np.genfromtxt(
+            fname=fname,
+            delimiter=',',
+            names='True',
+            usecols=[i for i in range(no_cols)],
+            dtype=csv_dtype,
+            converters=csv_converters
     )
     # users labels
-    users_labels = np.asarray([ (u[0], u[1], u[2]) for u in my_users ])
+    if which_users == 'election':
+        users_labels = np.asarray([ (u[0], u[1], u[2]) for u in my_users ])
+    else:
+        # varol data
+        # adding column indicating if user is bot
+        users_labels = np.asarray([ (u[0], u[1], u[2], u[15]) for u in my_users ])
 
     time_delta = np.asarray([
         [
@@ -388,7 +423,8 @@ def load_cresci_users(desired):
         'traditional1': 'traditional_spambots_1.csv',
         'traditional2': 'traditional_spambots_2.csv',
         'traditional3': 'traditional_spambots_3.csv',
-        'traditional4': 'traditional_spambots_4.csv'
+        'traditional4': 'traditional_spambots_4.csv',
+        'fake': 'fake_followers.csv'
     }
 
     def load_one(name):
@@ -414,5 +450,4 @@ def add_retweet_ratio(data):
     Adding retweet ratio column.
     :param data: Data.
     """
-    
     pass

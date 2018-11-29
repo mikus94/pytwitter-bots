@@ -47,6 +47,12 @@ class MultiStorage(metaclass=Singleton):
             self.save_quoted(data['tweet'])
             self.save_my_quoted(data['quoted'])
 
+    def save_varol_user(self, data):
+        """
+        Saving users from varol dataset.
+        """
+        self.db.insert_varol_user(data)
+
     def save_tweet(self, tweet):
         """
         Saving tweets in file system and db.

@@ -1,9 +1,3 @@
-CREATE VIEW view1 AS
-    select distinct on (id) * 
-    from twitter_user 
-    order by id, version desc;
+\copy (select * from newest_users) TO '~/studia/msc/users.csv'  With CSV DELIMITER ',' HEADER;
 
-
-\copy (select * from view1) TO '/home/miko/msc/trollemagisterka/src/users.csv'  With CSV DELIMITER ',' HEADER;
-
-DROP VIEW view1;
+\copy (select * from varol_user) TO '~/studia/msc/varol_users.csv'  With CSV DELIMITER ',' HEADER;

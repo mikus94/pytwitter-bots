@@ -162,6 +162,15 @@ class DbHandler(metaclass=Singleton):
         self.execute_insert(sql, user['user'])
         self.execute_insert(sql2, user['dsc_info'])
 
+    def insert_varol_user(self, user):
+        """
+        Method inserting varol user into DB.
+        """
+        sql = self.create_insert_sql(VAROL_USR_TABLE, VAROL_USR_FIELDS)
+        sql2 = self.create_insert_sql(USR_DSC_TABLE, USR_DSC_FIELDS)
+        self.execute_insert(sql, user['user'])
+        # self.execute_insert(sql2, user['dsc_info'])
+
     def insert_my_retweet(self, retweet):
         """
         Method inserting retweets into db.

@@ -7,8 +7,6 @@ Application downloading tweets using Twitter API.
 """
 Module taking care of raw Twitter JSONs received by API.
 """
-import time
-import datetime
 
 from .tweet_data import *
 from .user_data import *
@@ -38,7 +36,7 @@ def get_tweet(json):
     tweet = get_tweet_data(json)
     version_date = datetime_to_date(tweet['created_at'])
     tweet['version'] = version_date
-    user = get_user(json)
+    user = get_user(json['user'])
     user['user']['version'] = version_date
     user['dsc_info']['version'] = version_date
     # create result
@@ -84,3 +82,9 @@ def get_tweet(json):
     # regular tweet
     else:
         return result
+
+def get_tweet_user(json):
+    """
+    Method extracting only user data from tweet.
+    """
+    return get_user(json)

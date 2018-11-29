@@ -11,13 +11,13 @@ import getopt
 import sys
 
 import json
-import datetime
-import os
+import glob
 
-from storage import MultiStorage, Logger
-from handlers import unwrapper
+from .storage import MultiStorage, Logger
+from .handlers import unwrapper
+from .handlers.tools import parse_time, datetime_to_date
 
-from configs.data_config import *
+from .configs.data_config import *
 
 
 def format_json(data):
@@ -34,22 +34,93 @@ def main(path, opts):
     logger = Logger("extractor")
     storage = MultiStorage("extractor", True)
 
-    if opts.get('store', 'single') == 'multi':
+    option = opts.get('store', 'single')
+
+    if option == 'multi':
         # I ASSUME THIS IS DIR OF DATAs
+        # extracting multiple storage dirs
         all_datas = os.listdir(path)
         for store in all_datas:
             store_path = os.path.join(path, store, 'raw')
-            one_store(store_path, logger, storage)
-    else:
-        one_store(path, logger, storage)
+            one_store_extract(store_path, logger, storage)
+    elif option == 'single':
+        # extract just 1 storage dir
+        one_store_extract(path, logger, storage)
+    elif option == 'multi-gathered':
+        # extracting multiple storage files with multiple jsons.
+        # all_datas = os.listdir(path)
+        all_datas = glob.glob(path + '/*.dat')
+        for store in all_datas:
+            store_path = os.path.join(path, store)
+            multiple_extraction(store_path, logger, storage)
+    elif option == 'varol':
+        # extract varol dataset
+        store_varol(path, logger, storage)
 
     storage.close()
 
-def one_store(path, logger, storage):
+def store_varol(path, logger, storage):
+    """
+    Extracting and saving varol user dataset.
+    """
+    print("Processing Varol dataset at: {}".format(path))
+    # read file
+    with open(path, 'r', encoding='utf-8') as f:
+        full_data = f.readlines()
+    all_users_no = len(full_data)
+    print(all_users_no)
+    counter = 0
+    # load each user
+    for line in full_data:
+        # just 1 split
+        # data is like (bot_indent) space json
+        # if not declared breaks json
+        line = line.strip().split(maxsplit=1)
+        bot_or_not = line[0]
+        tweet = json.loads(line[1])
+        counter += 1
+        unwrapped = unwrapper.get_tweet_user(tweet)
+
+        if tweet.get('status', None) is None:
+            version = str(datetime.date.today())
+        else:
+            version = datetime_to_date(parse_time(tweet['status']['created_at']))
+        unwrapped['user']['version'] = version
+        unwrapped['user']['bot'] = bot_or_not
+        storage.save_varol_user(unwrapped)
+        # print progress of users loading
+        progress_print(counter, path, all_users_no)
+    pass
+
+def multiple_extraction(path, logger, storage):
+    """
+    Extract just 1 file containing multiple jsons with tweet data.
+    """
+    print("Processing: {}".format(path))
+    print(path)
+    # read whole file
+    with open(path, 'r', encoding='utf-8') as f:
+        full_data = f.readlines()
+    print(len(full_data))
+    all_tweets_no = len(full_data)
+    counter = 0
+    # iterate over tweets
+    for line in full_data:
+        # erase unnecesairy whitespaces
+        line = line.strip()
+        # load json
+        tweet = json.loads(line)
+        counter += 1
+        unwrapped = unwrapper.get_tweet(tweet)
+        storage.save(unwrapped)
+        # print progress
+        progress_print(counter, path, all_tweets_no)
+
+
+def one_store_extract(path, logger, storage):
     """
     Extract one strage
     """
-
     files = os.listdir(path)
     # files
     print("Processing:")
@@ -66,7 +137,12 @@ def one_store(path, logger, storage):
         counter += 1
         unwrapped = unwrapper.get_tweet(tweet)
         storage.save(unwrapped)
-        if counter % 250 == 0:
+        # print progress
+        progress_print(counter, path, all_tweets_no)
+
+
+def progress_print(counter, path, all_tweets_no):
+    if counter % 500 == 0:
             print(
                 """From store \'{}\'\n
                 Already {} tweets out of {} handled."""
@@ -77,14 +153,15 @@ def one_store(path, logger, storage):
         
 
 def usage():
-    print("To exectute insert -p option with path to raw tweet files.")
     print(
-        "You need also declare if you want to store your extracted tweets in:\n\
-        -Database -d option.\n\
-        -Directory -f and you need to apply correct path."
+        "To execute insert -p option with path to raw tweet files.\n",
+        """To execute insert -d option with path to dir with many subdirs with raw
+         data.""",
+        """To execute insert -g option with directory containg many files that
+         are filled with tweets jsons (line = json = tweet)."""
     )
 
-def check_path(path):
+def check_path(path, check_dir=False):
     """
     Checking if path is correct.
     :param path: Path to directory containing tweets.
@@ -93,7 +170,7 @@ def check_path(path):
         print("Error!")
         print("Given path: \'{}\' is not correct!".format(path))
         exit(2)
-    if not os.path.isdir(path):
+    if check_dir and not os.path.isdir(path):
         print("Error!")
         print("Given path: \'{}\' is not directory!".format(path))
 
@@ -107,7 +184,7 @@ if __name__ == "__main__":
     
     try:
         # opts, args = getopt.getopt(sys.argv[1:], "p:f:d")
-        opts, args = getopt.getopt(sys.argv[1:], "p:d:")
+        opts, args = getopt.getopt(sys.argv[1:], "p:d:g:v:")
     except getopt.GetoptError as err:
         # print help information and exit:
         print(err) # will print something like "option -a not recognized"
@@ -117,6 +194,7 @@ if __name__ == "__main__":
     input_dir = False
     output_opt = False
     print(opts)
+    store_opt={}
     for opt, arg in opts:
         # path declaration
         if opt == '-p':
@@ -135,7 +213,7 @@ if __name__ == "__main__":
             if arg != '':
                 input_dir = True
                 path = arg
-                check_path(path)
+                check_path(path, True)
                 store_opt = {
                     'store': 'multi'
                 }
@@ -143,34 +221,36 @@ if __name__ == "__main__":
                 print("ERROR!")
                 print("You need to declare path for -d option!")
                 exit()
-        # store in DB
-        # elif opt == '-d':
-        #     output_opt = True
-        #     store_opt = {
-        #         'opt': 'database'
-        #     }
-        # store in files
-        # elif opt == '-f':
-        #     if arg != '':
-        #         output_opt = True
-        #         store_opt = {
-        #             'opt': 'file',
-        #             'path': arg
-        #         }
-        #     else:
-        #         print("Error!")
-        #         print("Option -f require argument!")
-        #         exit()
+        elif opt == '-g':
+            if arg != '':
+                input_dir = True
+                path = arg
+                check_path(path)
+                store_opt = {
+                    'store': 'multi-gathered'
+                }
+            else:
+                print("ERROR!")
+                print("You need to declared path for -g option!")
+                exit()
+        elif opt == '-v':
+            if arg != '':
+                input_dir = True
+                path = arg
+                check_path(path)
+                store_opt = {
+                    'store': 'varol'
+                }
+            else:
+                print("ERROR!")
+                print("You need to declare path for -v option!")
+                exit()
+        
     if not input_dir:
         print("Error!")
         print("You need to declare input direcory!\n")
         usage()
         exit()
-    # if not output_opt:
-    #     print("Error!")
-    #     print("You need to declare output option!\n")
-    #     usage()
-    #     exit()
 
     # execute extraction
     main(path, store_opt)

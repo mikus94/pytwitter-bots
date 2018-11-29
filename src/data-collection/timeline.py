@@ -8,18 +8,14 @@ Application downloading tweets using Twitter API.
 Downloading module.
 """
 import tweepy
-import json
-import datetime
-import os
 from time import sleep
 
 
-from storage.db import DbHandler
-from storage.files import FileHandler
-from storage.logger import Logger
+from .storage.db import DbHandler
+from .storage.files import FileHandler
+from .storage.logger import Logger
 
-from configs import config
-from handlers import unwrapper
+from .configs import config
 
 
 # create authentication objects
@@ -43,12 +39,14 @@ logger = Logger("timeline")
 # get all users ids
 # get only these users that are not verified
 # only they can be bots and may be needed to analyze their tweets.
-select_newest_users_sql = ("""
+select_newest_users_sql = (
+    """
     SELECT DISTINCT ON (id) id, screen_name
     FROM twitter_user
     WHERE verified=false
     ORDER BY id, version DESC;
-    """)
+    """
+)
 
 users = db.execute_select(select_newest_users_sql)
 
