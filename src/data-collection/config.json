@@ -1,0 +1,23 @@
+{
+    "twitter_api": {
+        "cost_key": "HXK3pZFFkNNjagtGSvbUj3MnB",
+        "cost_skey": "SQuZAE2Z2Hzdyx9s9oXa7izUasIOFBqcG157KkCsBMba811vZ0",
+        "acc_key": "883066347172835331-gpRwaqYnosQaDFHy1IDL0aizLAr8cK6",
+        "acc_skey": "GDyHfvswuojASVZSHBUSKyCbFRLEYbn3QzmLexSmz7aGA"
+    },
+
+    "cursor": {
+        "keywords": ["@PatrykJaki", "@trzaskowski_"],
+        "since": "2018-10-22",
+        "until": "2018-10-23"
+    },
+
+    "data": {
+        "output_dir": "tweets/",
+        "filename": "data221018"
+    },
+
+    "timeline": {
+        "user_ids": [101576198, 370112160]
+    }
+}

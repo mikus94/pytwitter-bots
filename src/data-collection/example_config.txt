@@ -1,0 +1,43 @@
+Downloading module is handled by configuration json.
+This is documentation of that file.
+Given json has structure as described below.
+
+{
+    # This field is filled with Twitter API access data.
+    # Your application need to be accepted by Twitter administration in order 
+    # acquire Twitter API credentials.
+    # There should be filled fields:`
+    
+    "twitter_api" : {
+        # Auth keys
+            # Costumer key.
+            "cost_key" : "",
+            # Secret costumer key.
+            "cost_skey" : ""
+        # Access keys
+            # Access token
+            "acc_key" : "",
+            # Secret access token
+            "acc_skey" : ""
+         }
+    },
+
+    # Field with downloader options.
+    "cursor" : {
+        
+        # This field is a array of keywords that we want to download.
+        "keywords" : [],
+
+        # Fields indicating timeline of desired data.
+        # Fields are strings of format "YYYY-MM-DD"
+        "since" : "",
+        "until" : "",
+    }
+
+    # Information about data.
+    # where to save it
+    "data"  : {
+        "output_dir" : "",
+        "filename" : ""
+    }
+}

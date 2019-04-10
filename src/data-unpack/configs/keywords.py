@@ -6,8 +6,12 @@ Application downloading tweets using Twitter API.
 """
 Module storing tags that are used for Twitter Search API.
 """
+import datetime
 
-# tags = ['#jakilive']
+# start_date = '2018-10-12'
+start_date = str(datetime.date.today() - datetime.timedelta(1))
+end_date = str(datetime.date.today())
+
 
 tags = [
     '#ByleJaki',

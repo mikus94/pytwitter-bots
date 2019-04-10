@@ -11,14 +11,9 @@ import datetime
 import csv
 import numpy as np
 
-from .config import *
+import config
+from config import DESIRED_FIELDS
 
-# fields needed to classifier
-DESIRED_FIELDS = ["id", "statuses_count", "followers_count", "friends_count",
-                    "favourites_count", "listed_count", "default_profile",
-                    "geo_enabled", "profile_use_background_image", "verified",
-                    "protected"
-]
 
 FEATURE_COLS = {}
 for f, i in zip(DESIRED_FIELDS, range(len(DESIRED_FIELDS))):
@@ -35,6 +30,7 @@ def convert_bool(cbool):
     else:
         return False
 
+
 def str2date(x):
     """
     Convert date to numpy format.
@@ -43,7 +39,7 @@ def str2date(x):
         res = datetime.datetime.strptime(x.decode("utf-8"), '%Y-%m-%d %H:%M:%S')
     except AttributeError:
         res = datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S')
-    return res
+    return (res)
 
 def str2day(x):
     """
@@ -52,22 +48,26 @@ def str2day(x):
     return (datetime.datetime.strptime(x.decode("utf-8"), '%Y-%m-%d'))
     
 
-# def get_active_days(data, indices):
-#     """
-#     Function getting active days of users.
-#     """
-#     dates_data = data[:, date_indices]
-#     # make vectorized function
-#     str2date_vect = np.vectorize(str2date)
-#     dates_data = str2date_vect(dates_data)
-#     # timedelta
-#     dates_data = dates_data[:,1] - dates_data[:,0]
-#     # function extracting days from datetime.deltatime object
-#     days_vect = np.vectorize(lambda x: x.days)
-#     # result
-#     dates_data = days_vect(dates_data)
-#     # reshape from ((X, )) to ((X, 1))
-#     dates_data = dates_data.reshape((len(data), 1))
+def get_active_days(dates_data):
+    """
+    Function getting active days of users.
+    """
+    # get appropriate date
+    # dates_data = data[:,indices]
+    # make vectorized function to convert date
+    # make converter
+    str2date_vect = np.vectorize(str2date)
+    dates_data = str2date_vect(dates_data)
+    # timedelta
+    dates_data = dates_data[:,1] - dates_data[:,0]
+    # function extracting days from datetime.deltatime object
+    # +2 cuz of profiles that were active only 1 day
+    days_vect = np.vectorize(lambda x: x.days + 2)
+    # result
+    dates_data = days_vect(dates_data)
+    # reshape from ((X, )) to ((X, 1))
+    dates_data = dates_data.reshape((len(dates_data), 1))
+    return dates_data
 
 
 def load_csv_np(filename):
@@ -96,192 +96,25 @@ def get_columns(which, data):
     """
     Getting desired columns out of Cresci data
     """
-    # genuine accounts data
-    genuine = ["id", "name", "screen_name", "statuses_count", "followers_count",
-                "friends_count", "favourites_count", "listed_count", "url", "lang",
-                "time_zone", "location", "default_profile",
-                "default_profile_image", "geo_enabled", "profile_image_url",
-                "profile_banner_url", "profile_use_background_image",
-                "profile_background_image_url_https", "profile_text_color",
-                "profile_image_url_https", "profile_sidebar_border_color",
-                "profile_background_tile", "profile_sidebar_fill_color",
-                "profile_background_image_url", "profile_background_color",
-                "profile_link_color", "utc_offset", "is_translator",
-                "follow_request_sent", "protected", "verified", "notifications",
-                "description", "contributors_enabled", "following", "created_at",
-                "timestamp", "crawled_at", "updated", "test_set_1", "test_set_2"
-    ]
-    # social_spambots1
-    social_spambots1 = ["id","name","screen_name","statuses_count",
-                        "followers_count","friends_count","favourites_count",
-                        "listed_count","url","lang","time_zone","location",
-                        "default_profile","default_profile_image","geo_enabled",
-                        "profile_image_url","profile_banner_url",
-                        "profile_use_background_image",
-                        "profile_background_image_url_https",
-                        "profile_text_color","profile_image_url_https",
-                        "profile_sidebar_border_color","profile_background_tile"
-                        ,"profile_sidebar_fill_color",
-                        "profile_background_image_url",
-                        "profile_background_color","profile_link_color",
-                        "utc_offset","is_translator","follow_request_sent",
-                        "protected","verified","notifications","description",
-                        "contributors_enabled","following","created_at",
-                        "timestamp","crawled_at","updated","test_set_1"
-    ]
-    # socialspambots2
-    social_spambots2 = ["id","name","screen_name","statuses_count",
-                        "followers_count","friends_count","favourites_count",
-                        "listed_count","url","lang","time_zone","location",
-                        "default_profile","default_profile_image","geo_enabled",
-                        "profile_image_url","profile_banner_url",
-                        "profile_use_background_image",
-                        "profile_background_image_url_https",
-                        "profile_text_color","profile_image_url_https",
-                        "profile_sidebar_border_color",
-                        "profile_background_tile","profile_sidebar_fill_color"
-                        ,"profile_background_image_url",
-                        "profile_background_color","profile_link_color",
-                        "utc_offset","is_translator","follow_request_sent",
-                        "protected","verified","notifications","description",
-                        "contributors_enabled","following","created_at",
-                        "timestamp","crawled_at","updated"
-    ]
-    # social spambots 3
-    social_spambots3 = ["id","name","screen_name","statuses_count",
-                        "followers_count","friends_count","favourites_count",
-                        "listed_count","url","lang","time_zone","location",
-                        "default_profile","default_profile_image",
-                        "geo_enabled","profile_image_url","profile_banner_url",
-                        "profile_use_background_image",
-                        "profile_background_image_url_https",
-                        "profile_text_color","profile_image_url_https",
-                        "profile_sidebar_border_color",
-                        "profile_background_tile","profile_sidebar_fill_color",
-                        "profile_background_image_url",
-                        "profile_background_color","profile_link_color",
-                        "utc_offset","is_translator","follow_request_sent",
-                        "protected","verified","notifications","description",
-                        "contributors_enabled","following","created_at",
-                        "timestamp","crawled_at","updated","test_set_2"
-    ]
-    # traditional spambots 1
-    traditional_spambots1 = ["id","name","screen_name","statuses_count",
-                            "followers_count","friends_count",
-                            "favourites_count","listed_count","url","lang",
-                            "time_zone","location","default_profile",
-                            "default_profile_image","geo_enabled",
-                            "profile_image_url","profile_banner_url",
-                            "profile_use_background_image",
-                            "profile_background_image_url_https",
-                            "profile_text_color","profile_image_url_https",
-                            "profile_sidebar_border_color",
-                            "profile_background_tile",
-                            "profile_sidebar_fill_color",
-                            "profile_background_image_url",
-                            "profile_background_color",
-                            "profile_link_color","utc_offset","is_translator",
-                            "follow_request_sent","protected","verified",
-                            "notifications","description",
-                            "contributors_enabled","following","created_at",
-                            "timestamp","crawled_at","updated"
-    ]
-    # traditional spambots 2
-    traditional_spambots2 = ["id","name","screen_name","statuses_count",
-                            "followers_count","friends_count",
-                            "favourites_count","listed_count","url","lang",
-                            "time_zone","location","default_profile",
-                            "default_profile_image","geo_enabled",
-                            "profile_image_url","profile_banner_url",
-                            "profile_use_background_image",
-                            "profile_background_image_url_https",
-                            "profile_text_color","profile_image_url_https",
-                            "profile_sidebar_border_color",
-                            "profile_background_tile",
-                            "profile_sidebar_fill_color",
-                            "profile_background_image_url",
-                            "profile_background_color",
-                            "profile_link_color","utc_offset","is_translator",
-                            "follow_request_sent","protected","verified",
-                            "notifications","description",
-                            "contributors_enabled","following",
-                            "created_at","timestamp","crawled_at","updated"
-    ]
-    # traditional spambots 3
-    traditional_spambots3 = ["id","name","screen_name","statuses_count",
-                            "followers_count","friends_count",
-                            "favourites_count","listed_count","url","lang",
-                            "time_zone","location","default_profile",
-                            "default_profile_image","geo_enabled",
-                            "profile_image_url","profile_banner_url",
-                            "profile_use_background_image",
-                            "profile_background_image_url_https",
-                            "profile_text_color","profile_image_url_https",
-                            "profile_sidebar_border_color",
-                            "profile_background_tile",
-                            "profile_sidebar_fill_color",
-                            "profile_background_image_url",
-                            "profile_background_color","profile_link_color",
-                            "utc_offset","is_translator","follow_request_sent",
-                            "protected","verified","notifications",
-                            "description","contributors_enabled",
-                            "following","created_at","timestamp","crawled_at",
-                            "updated"
-    ]
-    # traditional spambots 4
-    traditional_spambots4 = ["id","name","screen_name","statuses_count",
-                            "followers_count","friends_count",
-                            "favourites_count","listed_count","url","lang",
-                            "time_zone","location","default_profile",
-                            "default_profile_image","geo_enabled",
-                            "profile_image_url","profile_banner_url",
-                            "profile_use_background_image",
-                            "profile_background_image_url_https",
-                            "profile_text_color","profile_image_url_https",
-                            "profile_sidebar_border_color",
-                            "profile_background_tile",
-                            "profile_sidebar_fill_color",
-                            "profile_background_image_url",
-                            "profile_background_color","profile_link_color",
-                            "utc_offset","is_translator","follow_request_sent",
-                            "protected","verified","notifications",
-                            "description","contributors_enabled","following",
-                            "created_at","timestamp","crawled_at","updated"
-    ]
-    # fake followers
-    fake_followers = [
-        "id","name","screen_name","statuses_count","followers_count",
-        "friends_count","favourites_count","listed_count","created_at","url",
-        "lang","time_zone","location","default_profile","default_profile_image",
-        "geo_enabled","profile_image_url","profile_banner_url",
-        "profile_use_background_image","profile_background_image_url_https",
-        "profile_text_color","profile_image_url_https",
-        "profile_sidebar_border_color","profile_background_tile",
-        "profile_sidebar_fill_color","profile_background_image_url",
-        "profile_background_color","profile_link_color","utc_offset",
-        "is_translator","follow_request_sent","protected","verified",
-        "notifications","description","contributors_enabled","following",
-        "updated"
-    ]
     data_indecies = []
     if which == 'humans':
-        data_indecies = genuine
+        data_indecies = config.CRESCI_FIELDS['genuine']
     elif which == 'social1':
-        data_indecies = social_spambots1
+        data_indecies = config.CRESCI_FIELDS['social_spambots1']
     elif which == 'social2':
-        data_indecies = social_spambots2
+        data_indecies = config.CRESCI_FIELDS['social_spambots2']
     elif which == 'social3':
-        data_indecies = social_spambots3
+        data_indecies = config.CRESCI_FIELDS['social_spambots3']
     elif which == 'traditional1':
-        data_indecies = traditional_spambots1
+        data_indecies = config.CRESCI_FIELDS['traditional_spambots1']
     elif which == 'traditional2':
-        data_indecies = traditional_spambots2
+        data_indecies = config.CRESCI_FIELDS['traditional_spambots2']
     elif which == 'traditional3':
-        data_indecies = traditional_spambots3
+        data_indecies = config.CRESCI_FIELDS['traditional_spambots3']
     elif which == 'traditional4':
-        data_indecies = traditional_spambots4
+        data_indecies = config.CRESCI_FIELDS['traditional_spambots4']
     elif which == 'fake':
-        data_indecies = fake_followers
+        data_indecies = config.CRESCI_FIELDS['fake_followers']
     else:
         print("WRONG DATASET NAME!!!! Given " + which)
         exit()
@@ -293,20 +126,9 @@ def get_columns(which, data):
             # it is the same date saved in timestamp format
             data_indecies.index(d) for d in ["timestamp", "crawled_at"]
         ]
-    dates_data = data[:, dates_indices]
-    # make vectorized function
-    str2date_vect = np.vectorize(str2date)
-    dates_data = str2date_vect(dates_data)
-    # timedelta
-    times_delta = dates_data[:,1] - dates_data[:,0]
-    # function extracting days from datetime.deltatime object
-    days_vect = np.vectorize(lambda x: x.days)
-    # result
-    times_delta = days_vect(times_delta)
-    # reshape from ((X, )) to ((X, 1))
-    times_delta = times_delta.reshape((len(data), 1))
+    times_delta = get_active_days(data[:,dates_indices])
 
-    # get data desired
+    # get desired data
     indecies = [data_indecies.index(d) for d in DESIRED_FIELDS]
     data = data[:,indecies]
     # fill missing data
@@ -360,10 +182,10 @@ def load_exported_users(which_users):
     fname = ''
     no_cols = 1
     if which_users == 'election':
-        fname = USER_DATA_PATH
+        fname = config.USER_DATA_PATH
         no_cols = 15
     elif which_users == 'varol':
-        fname = VAROL_USER_DATA_PATH
+        fname = config.VAROL_USER_DATA_PATH
         no_cols = 16
         csv_dtype.append(np.dtype(bool))
         csv_converters[15] = convert_bool
@@ -375,28 +197,29 @@ def load_exported_users(which_users):
     my_users = np.genfromtxt(
             fname=fname,
             delimiter=',',
-            names='True',
+            names=True,
             usecols=[i for i in range(no_cols)],
             dtype=csv_dtype,
             converters=csv_converters
     )
+
     # users labels
     if which_users == 'election':
         users_labels = np.asarray([ (u[0], u[1], u[2]) for u in my_users ])
     else:
         # varol data
         # adding column indicating if user is bot
-        users_labels = np.asarray([ (u[0], u[1], u[2], u[15]) for u in my_users ])
+        users_labels = np.asarray([(u[0], u[1], u[2], u[15]) for u in my_users ])
 
+    # getting active days
     time_delta = np.asarray([
         [
-            str2date(u[i]) for i in [1,14]
+            (u[i]) for i in [1,14]
         ]
         for u in my_users
     ])
-    time_delta = time_delta[:, 1] - time_delta[:, 0]
-    time_delta = np.vectorize(lambda x: x.days)(time_delta)
-    time_delta = time_delta.reshape((len(time_delta), 1))
+    time_delta = get_active_days(time_delta)
+
     # users data
     # obtain fields needed to classifier
     my_users = np.asarray([
@@ -431,7 +254,7 @@ def load_cresci_users(desired):
         """
         Load 1 dataset.
         """
-        set_path = os.path.join(CRESCI_DATA, cresci_sets[name], 'users.csv')
+        set_path = os.path.join(config.CRESCI_DATA, cresci_sets[name], 'users.csv')
         _, data = load_csv_np(set_path)
         data = get_columns(name, data)
         data.astype(int)
