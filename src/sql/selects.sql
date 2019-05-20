@@ -42,3 +42,16 @@ from (
   ) as E
 group by lp
 order by clp desc;
+
+-- # mentions
+SELECT
+        screen_name, count
+    FROM
+        newest_users as U,
+        (
+            SELECT user_id, count( *) as count
+            FROM mentions
+            GROUP BY user_id
+        ) as T
+    WHERE T.user_id = U.id
+    ORDER BY T.count DESC;

@@ -13,11 +13,11 @@ import sys
 import json
 import glob
 
-from .storage import MultiStorage, Logger
-from .handlers import unwrapper
-from .handlers.tools import parse_time, datetime_to_date
+from storage import MultiStorage
+from handlers import unwrapper
+from handlers.tools import parse_time, datetime_to_date
 
-from .configs.data_config import *
+from configs.data_config import *
 
 
 def format_json(data):
@@ -30,36 +30,23 @@ def main(path, opts):
     """
     Extract stores
     """
-    # create logger
-    logger = Logger("extractor")
     storage = MultiStorage("extractor", True)
 
     option = opts.get('store', 'single')
-
-    if option == 'multi':
-        # I ASSUME THIS IS DIR OF DATAs
-        # extracting multiple storage dirs
-        all_datas = os.listdir(path)
-        for store in all_datas:
-            store_path = os.path.join(path, store, 'raw')
-            one_store_extract(store_path, logger, storage)
-    elif option == 'single':
-        # extract just 1 storage dir
-        one_store_extract(path, logger, storage)
-    elif option == 'multi-gathered':
+    if option == 'multi-gathered':
         # extracting multiple storage files with multiple jsons.
         # all_datas = os.listdir(path)
         all_datas = glob.glob(path + '/*.dat')
         for store in all_datas:
             store_path = os.path.join(path, store)
-            multiple_extraction(store_path, logger, storage)
+            multiple_extraction(store_path, storage)
     elif option == 'varol':
         # extract varol dataset
-        store_varol(path, logger, storage)
+        store_varol(path, storage)
 
     storage.close()
 
-def store_varol(path, logger, storage):
+def store_varol(path, storage):
     """
     Extracting and saving varol user dataset.
     """
@@ -92,7 +79,7 @@ def store_varol(path, logger, storage):
         progress_print(counter, path, all_users_no)
     pass
 
-def multiple_extraction(path, logger, storage):
+def multiple_extraction(path, storage):
     """
     Extract just 1 file containing multiple jsons with tweet data.
     """
@@ -117,30 +104,6 @@ def multiple_extraction(path, logger, storage):
         progress_print(counter, path, all_tweets_no)
 
 
-def one_store_extract(path, logger, storage):
-    """
-    Extract one strage
-    """
-    files = os.listdir(path)
-    # files
-    print("Processing:")
-    print(path)
-    print(len(files))
-    all_tweets_no = len(files)
-    counter = 0
-    for f in files:
-        # path to file
-        filepath = os.path.join(path, f)
-        # load tweet
-        with open(filepath, 'r') as fd:
-            tweet = json.load(fd)
-        counter += 1
-        unwrapped = unwrapper.get_tweet(tweet)
-        storage.save(unwrapped)
-        # print progress
-        progress_print(counter, path, all_tweets_no)
-
-
 def progress_print(counter, path, all_tweets_no):
     if counter % 500 == 0:
             print(
@@ -150,16 +113,17 @@ def progress_print(counter, path, all_tweets_no):
             )
             print("Percentage: {}%.".format(str((counter / all_tweets_no)*100)))
 
-        
-
 def usage():
     print(
-        "To execute insert -p option with path to raw tweet files.\n",
-        """To execute insert -d option with path to dir with many subdirs with raw
-         data.""",
-        """To execute insert -g option with directory containg many files that
-         are filled with tweets jsons (line = json = tweet)."""
+        "Usage information.\n"
+        "(*) We assume that Tweet jsons are gathered in single file with "
+        "'*.dat' extension.\n"
+        "(*) Moreover single line contain single tweet.\n"
+        "Execution:\n"
+        "- to execute insertion file with many tweets use option '-p'.\n"
+        "- to execute insertion of Varol dataset users use option '-v'.\n"
     )
+
 
 def check_path(path, check_dir=False):
     """
@@ -175,53 +139,37 @@ def check_path(path, check_dir=False):
         print("Given path: \'{}\' is not directory!".format(path))
 
 if __name__ == "__main__":
+    # check if option is declared with path
     if len(sys.argv) < 2:
         print("Error!")
         print("Too few arguments passed!\n")
         usage()
         exit(2)
+
+    # get path
     path = sys.argv[1]
-    
+
+    # try options
     try:
         # opts, args = getopt.getopt(sys.argv[1:], "p:f:d")
-        opts, args = getopt.getopt(sys.argv[1:], "p:d:g:v:")
+        opts, args = getopt.getopt(sys.argv[1:], "p:v:")
+    # wrong options
+    # print help information and exit:
     except getopt.GetoptError as err:
-        # print help information and exit:
-        print(err) # will print something like "option -a not recognized"
+        # will print something like "option -a not recognized"
+        print(err, '\n')
         usage()
         sys.exit(2)
+
     # parse options
     input_dir = False
     output_opt = False
     print(opts)
     store_opt={}
+    # execution option
     for opt, arg in opts:
         # path declaration
         if opt == '-p':
-            if arg != '':
-                input_dir = True
-                path = arg
-                check_path(path)
-                store_opt = {
-                    'store': 'single'
-                }
-            else:
-                print("ERROR!")
-                print("You need to declare path for -p option!")
-                exit()
-        elif opt == '-d':
-            if arg != '':
-                input_dir = True
-                path = arg
-                check_path(path, True)
-                store_opt = {
-                    'store': 'multi'
-                }
-            else:
-                print("ERROR!")
-                print("You need to declare path for -d option!")
-                exit()
-        elif opt == '-g':
             if arg != '':
                 input_dir = True
                 path = arg
@@ -231,7 +179,7 @@ if __name__ == "__main__":
                 }
             else:
                 print("ERROR!")
-                print("You need to declared path for -g option!")
+                print("You need to declared path for -p option!")
                 exit()
         elif opt == '-v':
             if arg != '':

@@ -16,7 +16,7 @@ from sklearn.utils import shuffle
 
 from sklearn.linear_model import LogisticRegression
 
-import loader
+from classification import loader
 from config import DESIRED_FIELDS
 
 # CV

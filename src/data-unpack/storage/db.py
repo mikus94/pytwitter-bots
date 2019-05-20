@@ -21,8 +21,8 @@ class DbHandler(metaclass=Singleton):
         Initializer creating connection to database.
         """
         try:
-            self.conn = psycopg2.connect(DB_CONNECTION)
-            # self.conn = psycopg2.connect(DB_TEST)
+            # self.conn = psycopg2.connect(DB_CONNECTION)
+            self.conn = psycopg2.connect(DB_TEST)
             self.cur = self.conn.cursor()
         except Exception as e:
             print("I am unable to connect to the database, due to\n")

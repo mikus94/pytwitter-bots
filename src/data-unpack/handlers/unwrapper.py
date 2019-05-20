@@ -50,9 +50,7 @@ def get_tweet(json):
         retweeted = get_tweet_data(json.get('retweeted_status', {}))
         retweeted['version'] = version_date
         tweet['retweeted'] = True
-################################################################################
-####################### TODO: TURN OFF???! #####################################
-################################################################################
+        # collect?
         result['retweeted'] = retweeted
         # result['retweeted']['version'] = tweet['version']
         date = parse_time(json.get('created_at', None))
@@ -69,9 +67,7 @@ def get_tweet(json):
 
         quoted_tweet = get_tweet_data(json.get('quoted_status', {}))
         quoted_tweet['version'] = version_date
-################################################################################
-####################### TODO: TURN OFF???! #####################################
-################################################################################
+        # collect?
         result['quoted_tweet'] = quoted_tweet
         # result['quoted_tweet']['version'] = tweet['version']
         result['quoted'] = {
