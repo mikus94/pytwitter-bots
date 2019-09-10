@@ -19,6 +19,8 @@ src/*/*/*/__pycache__
 # data
 src/data-collection/data*
 src/data-collection/tweets/*
+src/*/*/*.dat
+src/*/*/*/*.dat
 
 # unpack
 src/data-unpack/*.dat
@@ -29,4 +31,5 @@ src/classification/outputs/*
 
 # plotting
 src/plotting/plots/*
+
 \.idea/

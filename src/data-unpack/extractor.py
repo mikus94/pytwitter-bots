@@ -12,12 +12,12 @@ import sys
 
 import json
 import glob
+import os
+import datetime
 
-from storage import MultiStorage
+from storage.db import DbHandler
 from handlers import unwrapper
 from handlers.tools import parse_time, datetime_to_date
-
-from configs.data_config import *
 
 
 def format_json(data):
@@ -30,7 +30,7 @@ def main(path, opts):
     """
     Extract stores
     """
-    storage = MultiStorage("extractor", True)
+    storage = DbHandler()
 
     option = opts.get('store', 'single')
     if option == 'multi-gathered':
@@ -74,7 +74,7 @@ def store_varol(path, storage):
             version = datetime_to_date(parse_time(tweet['status']['created_at']))
         unwrapped['user']['version'] = version
         unwrapped['user']['bot'] = bot_or_not
-        storage.save_varol_user(unwrapped)
+        storage.insert_varol_user(unwrapped)
         # print progress of users loading
         progress_print(counter, path, all_users_no)
     pass
@@ -99,7 +99,7 @@ def multiple_extraction(path, storage):
         tweet = json.loads(line)
         counter += 1
         unwrapped = unwrapper.get_tweet(tweet)
-        storage.save(unwrapped)
+        storage.insert_all(unwrapped)
         # print progress
         progress_print(counter, path, all_tweets_no)
 
@@ -196,7 +196,7 @@ if __name__ == "__main__":
         
     if not input_dir:
         print("Error!")
-        print("You need to declare input direcory!\n")
+        print("You need to declare input directory!\n")
         usage()
         exit()
 

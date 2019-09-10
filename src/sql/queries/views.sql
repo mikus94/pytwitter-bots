@@ -4,6 +4,12 @@ CREATE VIEW newest_users AS
     from twitter_user 
     order by id, version desc;
 
+-- view oldest version of users gathered
+CREATE VIEW oldest_users AS
+    select distinct on (id) *
+    from twitter_user
+    order by id, version;
+
 -- view with ids of tweets connected to trzaskowski
 CREATE VIEW trzaskowski_tweets AS
     SELECT tweet_id

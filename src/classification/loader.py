@@ -11,8 +11,14 @@ import datetime
 import csv
 import numpy as np
 
-import config
-from config import DESIRED_FIELDS
+
+from utilities import (
+    DESIRED_FIELDS,
+    CRESCI_FIELDS,
+    VAROL_USER_DATA_PATH,
+    USER_DATA_PATH,
+    CRESCI_DATA
+)
 
 
 FEATURE_COLS = {}
@@ -98,23 +104,23 @@ def get_columns(which, data):
     """
     data_indecies = []
     if which == 'humans':
-        data_indecies = config.CRESCI_FIELDS['genuine']
+        data_indecies = CRESCI_FIELDS['genuine']
     elif which == 'social1':
-        data_indecies = config.CRESCI_FIELDS['social_spambots1']
+        data_indecies = CRESCI_FIELDS['social_spambots1']
     elif which == 'social2':
-        data_indecies = config.CRESCI_FIELDS['social_spambots2']
+        data_indecies = CRESCI_FIELDS['social_spambots2']
     elif which == 'social3':
-        data_indecies = config.CRESCI_FIELDS['social_spambots3']
+        data_indecies = CRESCI_FIELDS['social_spambots3']
     elif which == 'traditional1':
-        data_indecies = config.CRESCI_FIELDS['traditional_spambots1']
+        data_indecies = CRESCI_FIELDS['traditional_spambots1']
     elif which == 'traditional2':
-        data_indecies = config.CRESCI_FIELDS['traditional_spambots2']
+        data_indecies = CRESCI_FIELDS['traditional_spambots2']
     elif which == 'traditional3':
-        data_indecies = config.CRESCI_FIELDS['traditional_spambots3']
+        data_indecies = CRESCI_FIELDS['traditional_spambots3']
     elif which == 'traditional4':
-        data_indecies = config.CRESCI_FIELDS['traditional_spambots4']
+        data_indecies = CRESCI_FIELDS['traditional_spambots4']
     elif which == 'fake':
-        data_indecies = config.CRESCI_FIELDS['fake_followers']
+        data_indecies = CRESCI_FIELDS['fake_followers']
     else:
         print("WRONG DATASET NAME!!!! Given " + which)
         exit()
@@ -182,10 +188,10 @@ def load_exported_users(which_users):
     fname = ''
     no_cols = 1
     if which_users == 'election':
-        fname = config.USER_DATA_PATH
+        fname = USER_DATA_PATH
         no_cols = 15
     elif which_users == 'varol':
-        fname = config.VAROL_USER_DATA_PATH
+        fname = VAROL_USER_DATA_PATH
         no_cols = 16
         csv_dtype.append(np.dtype(bool))
         csv_converters[15] = convert_bool
@@ -254,7 +260,7 @@ def load_cresci_users(desired):
         """
         Load 1 dataset.
         """
-        set_path = os.path.join(config.CRESCI_DATA, cresci_sets[name], 'users.csv')
+        set_path = os.path.join(CRESCI_DATA, cresci_sets[name], 'users.csv')
         _, data = load_csv_np(set_path)
         data = get_columns(name, data)
         data.astype(int)
@@ -266,11 +272,3 @@ def load_cresci_users(desired):
     for d in desired:
         res[d] = load_one(d)
     return res
-
-
-def add_retweet_ratio(data):
-    """
-    Adding retweet ratio column.
-    :param data: Data.
-    """
-    pass

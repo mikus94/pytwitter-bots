@@ -17,6 +17,7 @@ nltk.download('punkt')
 nltk.download('stopwords')
 
 ACTIVE_FILE = 'activeness.txt'
+OLD_ACTIVE_FILE = 'old_activeness.txt'
 
 # Consumer API keys
 # (API key)
@@ -83,6 +84,84 @@ def create_sql_ids(bots):
     sql = sql[:-2] + ')'
     return sql
 
+def count_bot_tweets(bots):
+    """
+    Function counting tweets of bots.
+    :param bots: Numpy array with bots (id, name, date of creation).
+    :return:
+    """
+    with open(OLD_ACTIVE_FILE, 'w') as f:
+        print("Bots count {}.".format(len(bots)), file=f)
+    print("Bots count {}.".format(len(bots)))
+
+    # get ids
+    sql_where = create_sql_ids(bots[:, 0])
+
+    sql = """
+            SELECT SUM(E2.count)
+            FROM
+                (
+                    SELECT user_id, count(user_id) as count
+                    FROM newest_tweets
+                    WHERE user_id {}
+                    GROUP BY user_id
+                ) as E2;
+        """.format(sql_where, sql_where)
+
+    res = get_data(sql)
+    print(res)
+
+
+
+def check_old_activness(bots):
+    """
+    Function checking activness of bots.
+    :param bots: Numpy array with bots (id, name, date of creation).
+    :return:
+    """
+    with open(OLD_ACTIVE_FILE, 'w') as f:
+        print("Bots count {}.".format(len(bots)), file=f)
+    print("Bots count {}.".format(len(bots)))
+
+    # get ids
+    sql_where = create_sql_ids(bots[:, 0])
+
+    sql = """
+        SELECT E.screen_name, E.created_at, E2.count, E.statuses_count, E.followers_count,
+            E.friends_count, E.favourites_count, E.listed_count
+        FROM
+            (
+                SELECT *
+                FROM oldest_users
+                WHERE id {}
+            ) as E,
+            (
+                SELECT user_id, count(user_id) as count
+                FROM newest_tweets
+                WHERE user_id {}
+                GROUP BY user_id
+            ) as E2
+        WHERE E.id=E2.user_id
+        ORDER BY E2.count DESC
+        LIMIT 20;
+    """.format(sql_where, sql_where)
+
+    res = get_data(sql)
+    tab = tt.Texttable()
+    headers = [
+        'Name', 'Created_at', 'Tweets', 'Statuses',
+        'Followers', 'Friends', 'Favourites', 'Listed'
+    ]
+    tab.header(headers)
+    tab.set_cols_width([15, 19, 7, 8, 9, 7, 10, 7])
+    with open(OLD_ACTIVE_FILE, 'a') as f:
+        for row in res:
+            print(row, file=f)
+            tab.add_row(row)
+    s = tab.draw()
+    with open(OLD_ACTIVE_FILE+'.table', 'w') as f:
+        print(s, file=f)
+
 
 def check_activness(bots):
     """
@@ -104,7 +183,7 @@ def check_activness(bots):
             (
                 SELECT *
                 FROM newest_users
-                WHERE {}
+                WHERE id {}
             ) as E,
             (
                 SELECT user_id, count(user_id) as count
@@ -295,6 +374,10 @@ BOTS_FILE = 'boty.txt'
 if __name__ == '__main__':
 
     new_bots = load_bots_data(BOTS_FILE)
+
+    count_bot_tweets(new_bots)
+    check_old_activness(new_bots)
+    check_activness(new_bots)
 
     get_tweet_tokens_all()
     get_tweet_tokens_bots(new_bots)

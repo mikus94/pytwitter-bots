@@ -4,13 +4,23 @@ Author: Mikolaj Gagatek
 Masters Degree Thesis application.
 """
 import psycopg2
-import os
-import json
-import datetime
 
-from .singleton import Singleton
-from configs.data_config import *
 from configs.db_config import *
+
+class Singleton(type):
+    """
+    Define an Instance operation that lets clients access its unique
+    instance.
+    """
+    def __init__(cls, name, bases, attrs, **kwargs):
+        super().__init__(name, bases, attrs)
+        cls._instance = None
+
+    def __call__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__call__(*args, **kwargs)
+        return cls._instance
+
 
 class DbHandler(metaclass=Singleton):
     """
@@ -21,13 +31,30 @@ class DbHandler(metaclass=Singleton):
         Initializer creating connection to database.
         """
         try:
-            # self.conn = psycopg2.connect(DB_CONNECTION)
-            self.conn = psycopg2.connect(DB_TEST)
+            self.conn = psycopg2.connect(DB_CONNECTION)
             self.cur = self.conn.cursor()
         except Exception as e:
             print("I am unable to connect to the database, due to\n")
             print(e)
             exit()
+
+    def insert_all(self, data):
+        """
+        Saving tweet data passed by JSON containing user, tweet and maybe
+        retweet or quoted data.
+        :param data: JSON obtained after unwrapping Twitter API JSON.
+        """
+        self.insert_user(data['user'])
+        if (data.get('tweet', None) is not None):
+            self.insert_tweet(data['tweet'])
+        if (data.get('retweet', None) is not None):
+            self.insert_tweet(data['retweeted'])
+            self.insert_tweet(data['tweet'])
+            self.insert_my_retweet(data['retweet'])
+        if (data.get('quoted', None) is not None):
+            self.insert_tweet(data['quoted_tweet'])
+            self.insert_tweet(data['tweet'])
+            self.insert_my_quoted(data['quoted'])
 
     def execute_insert(self, sql, data):
         """
@@ -167,8 +194,8 @@ class DbHandler(metaclass=Singleton):
         Method inserting varol user into DB.
         """
         sql = self.create_insert_sql(VAROL_USR_TABLE, VAROL_USR_FIELDS)
-        sql2 = self.create_insert_sql(USR_DSC_TABLE, USR_DSC_FIELDS)
         self.execute_insert(sql, user['user'])
+        # sql2 = self.create_insert_sql(USR_DSC_TABLE, USR_DSC_FIELDS)
         # self.execute_insert(sql2, user['dsc_info'])
 
     def insert_my_retweet(self, retweet):

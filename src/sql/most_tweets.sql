@@ -1,1 +1,0 @@
-select t.user_id, t.c, u.screen_name from (select t.user_id, count(t.user_id) as c from (select distinct * from tweet order by version desc) as t group by t.user_id order by c desc) as t, twitter_user as u where t.user_id=u.id group by t.user_id, t.c, u.screen_name order by t.c desc;

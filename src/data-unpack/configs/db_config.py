@@ -9,14 +9,14 @@ from .tools import *
 _TODAY = str(datetime.date.today())
 
 # configuration of connection to DB
-DB_CONNECTION = ("""
-    dbname='twitter2'
-    user='postgres'
-    host='localhost'
-    password='1234'
-""")
+# DB_CONNECTION = ("""
+#     dbname='twitter2'
+#     user='postgres'
+#     host='localhost'
+#     password='1234'
+# """)
 
-DB_TEST = ("""
+DB_CONNECTION = ("""
     dbname='tttest'
     user='postgres'
     host='localhost'

@@ -6,18 +6,20 @@ Masters Degree Thesis application.
 """
 
 """
-
-import numpy as np
-np.set_printoptions(suppress=True)
-np.set_printoptions(formatter={'all':lambda x: str(x)})
-
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import shuffle
 
 from sklearn.linear_model import LogisticRegression
+from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
 
-from classification import loader
-from config import DESIRED_FIELDS
+
+import loader
+from utilities import DESIRED_FIELDS
+
+import numpy as np
+np.set_printoptions(suppress=True)
+np.set_printoptions(formatter={'all': lambda x: str(x)})
 
 # CV
 CV_NO = 10
@@ -32,8 +34,6 @@ CLASSIFICATION_DATA = list(DESIRED_FIELDS)
 CLASSIFICATION_DATA.append("time_active")
 # indicate which fields are int
 INT_FIELDS = range(1,6)
-# INT_FIELDS = [1]
-
 
 def split_labels(data):
     """
@@ -287,7 +287,7 @@ def make_cv(clf, opts={}):
     print(np.mean(scores))
 
 
-def classify(clf, opts={}):
+def classify(clf, opts={}, output='bots.txt'):
     clf = clf.set_params(**opts)
 
     # load whole training data for classifier
@@ -304,7 +304,7 @@ def classify(clf, opts={}):
 
     # save
     ds = 0
-    with open('boty.txt', 'w') as f:
+    with open(output, 'w') as f:
         for label, udata, pred in zip(my_users_labels, my_users_data, predicts):
             if int(pred) == 1:
                 ds += 1
@@ -331,11 +331,11 @@ log_opts = {
 }
 
 clfs = [
-    (LogisticRegression(), log_opts, 'LogisitcRegression'),
-    # (svm.LinearSVC(), {'max_iter': 10000}, 'SVM - LinearSVC')
+    (LogisticRegression(), log_opts, 'LogisitcRegression', 'BotLog.txt'),
+    (svm.LinearSVC(), {'max_iter': 10000}, 'SVM - LinearSVC', 'BotSvm.txt')
 ]
 
-for clf, opts, name in clfs:
+for clf, opts, name, output in clfs:
     print("\nClassification with {}.".format(name))
     make_cv(clf, opts)
-    classify(clf, opts)
+    classify(clf, opts, output)

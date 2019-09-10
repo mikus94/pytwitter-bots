@@ -33,6 +33,39 @@ from (
 group by lt
 order by cl desc;
 
+-- # origin of accounts sanok
+select lower(location) as lt, count(lower(location)) as cl
+from (
+      select distinct on (id) *
+      from twitter_user_dsc
+      order by id, version desc
+  ) as E
+where lower(location) like '%nok%'
+group by lt
+order by cl desc;
+
+-- # origin of accounts sanok IDS
+select id
+from (
+      select distinct on (id) *
+      from twitter_user_dsc
+      where lower(location) like '%nok%'
+      order by id, version desc
+  ) as E;
+
+-- # of tts by sanok ppl
+select count(*)
+from newest_tweets,
+    (select id
+      from (
+          select distinct on (id) *
+          from twitter_user_dsc
+          where lower(location) like '%nok%'
+          order by id, version desc
+      ) as E
+    ) as sanok_users
+where user_id = sanok_users.id;
+
 -- # origin of tweets
 select lower(place) as lp, count(lower(place)) as clp
 from (

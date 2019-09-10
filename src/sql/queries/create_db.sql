@@ -1,8 +1,8 @@
 -- In some tables there are added version field that indicates the version of
--- given data. It is necessairy because of data changes in time.
+-- given data. It is necessary because of data changes in time.
 
--- table of features for E.Ferrara bot detection technique.
--- all the fields are coresponding the once declared in Twitter API
+-- table of features for E. Ferrara bot detection technique.
+-- all the fields are corresponding the once declared in Twitter API
 -- https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object
 CREATE TABLE twitter_user (
     id                              bigint NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE varol_user (
     default_profile_image           boolean NOT NULL,
 
     version                         date NOT NULL,
-    -- filed indicating whetver user is a bot or not.
+    -- filed indicating whether user is a bot or not.
     bot                             boolean NOT NULL,
     PRIMARY KEY (id, version)
 );
@@ -69,7 +69,7 @@ CREATE TABLE tweet (
     created_at                      timestamp NOT NULL,
     -- text of tweet
     tweet                           text,
-    -- if it was retweeted by authenticeted user (Twitter API)
+    -- if it was retweeted by authenticated user (Twitter API)
     retweeted                       boolean NOT NULL,
     -- # of retweets
     retweet_count                   integer NOT NULL,
