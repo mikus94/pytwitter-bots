@@ -10,6 +10,7 @@ Module taking care of raw Twitter JSONs received by API.
 import time
 from datetime import datetime
 
+
 def parse_time(time_str):
     """
     Parsing twitter time to python time.

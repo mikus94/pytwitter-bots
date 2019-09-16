@@ -7,6 +7,7 @@ import psycopg2
 
 from configs.db_config import *
 
+
 class Singleton(type):
     """
     Define an Instance operation that lets clients access its unique

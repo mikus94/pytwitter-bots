@@ -1,9 +1,9 @@
 {
     "twitter_api": {
-        "cost_key": "HXK3pZFFkNNjagtGSvbUj3MnB",
-        "cost_skey": "SQuZAE2Z2Hzdyx9s9oXa7izUasIOFBqcG157KkCsBMba811vZ0",
-        "acc_key": "883066347172835331-gpRwaqYnosQaDFHy1IDL0aizLAr8cK6",
-        "acc_skey": "GDyHfvswuojASVZSHBUSKyCbFRLEYbn3QzmLexSmz7aGA"
+        "cost_key": "*",
+        "cost_skey": "*",
+        "acc_key": "*",
+        "acc_skey": "*"
     },
 
     "cursor": {

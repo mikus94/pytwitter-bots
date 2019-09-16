@@ -8,7 +8,6 @@ Application downloading tweets using Twitter API.
 Module taking care of raw Twitter JSONs received by API.
 """
 import time
-import datetime
 
 def parse_time(time_str):
     """

@@ -3,21 +3,14 @@
 Author: Mikolaj Gagatek
 Masters Degree Thesis application.
 """
-
+import datetime
 from .tools import *
 
 _TODAY = str(datetime.date.today())
 
 # configuration of connection to DB
-# DB_CONNECTION = ("""
-#     dbname='twitter2'
-#     user='postgres'
-#     host='localhost'
-#     password='1234'
-# """)
-
 DB_CONNECTION = ("""
-    dbname='tttest'
+    dbname='twitter'
     user='postgres'
     host='localhost'
     password='1234'

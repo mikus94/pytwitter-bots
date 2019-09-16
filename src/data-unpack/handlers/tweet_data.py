@@ -7,11 +7,9 @@ Application downloading tweets using Twitter API.
 """
 Module taking care of raw Twitter JSONs received by API.
 """
-import time
-import datetime
 
 from configs.db_config import *
-from .tools import *
+
 
 def get_tweet_data(json):
     """

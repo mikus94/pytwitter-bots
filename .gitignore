@@ -33,3 +33,13 @@ src/classification/outputs/*
 src/plotting/plots/*
 
 \.idea/
+
+
+# txts
+*/*.txt
+*/*/*.txt
+*/*/*/*.txt
+
+*/*.table
+*/*/*.table
+*/*/*/*.table
