@@ -1,6 +1,9 @@
 Bot existence in Twitter conversations during Polish municipal election (Warsaw).
 ==
-TODO: Abstract Description.
+Polish Abstract.
+
+W obecnych czasach wielu badaczy, dziennikarzy a także śledczych doszło do wniosku, że social media są ważnym narzędziem używanym do manipulacji opinią publiczną. Wiele badań wskazuje na masowe działania dezinformacyjnych w social mediach. W części tych kampanii wykorzystywano boty (tzw. social bots), które swoim zachowaniem miały przypominać ludzi. W mojej pracy chciałbym przeanalizować występowanie takich manipulacji podczas kampanii do ostatnich wyborów prezydentckich w Warszawie. W okresie ponad dwóch tygodnii poprzedzającym dzień elekcyjny (05/10/18 do 22/10/18) zbierałem tweety zawierające słowa kluczowe związane z wyborami w Warszawie. Wykorzystując technikę uczenia maszynowego udało mi się sklasyfikować część użytkowników będących potencjalnymi botami biorącymi udział w debacie publicznej.
+
 ---
 Repository contain my Masters Degree Thesis work.
 It includes few modules:
