@@ -10,7 +10,7 @@ _TODAY = str(datetime.date.today())
 
 # configuration of connection to DB
 DB_CONNECTION = ("""
-    dbname='europarlament2019'
+    dbname='parlament2019'
     user='postgres'
     host='localhost'
     password='1234'
@@ -19,9 +19,9 @@ DB_CONNECTION = ("""
 ################################################################################
 # fields that are required to DB table + its default values + parsing function
 ################################################################################
-_FUNC_ID_ = lambda x: x
-_FUNC_INT_ = lambda x: int(x)
-_FUNC_DATE_ = lambda x: parse_time(x)
+_FUNC_ID_ = lambda x: x if x else ""
+_FUNC_INT_ = lambda x: int(x) if x else 0
+_FUNC_DATE_ = lambda x: parse_time(x) if x else ""
 
 # tweets
 TT_TABLE = 'tweet'
