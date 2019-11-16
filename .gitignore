@@ -31,6 +31,11 @@ src/classification/outputs/*
 
 # plotting
 src/plotting/plots/*
+src/plotting/*.txt
+src/plotting/*.png
+src/plotting/*/*.txt
+src/plotting/*/*.txt
+
 
 *.log
 *.png
