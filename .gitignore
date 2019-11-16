@@ -32,6 +32,11 @@ src/classification/outputs/*
 # plotting
 src/plotting/plots/*
 
+*.log
+*.png
+*.zip
+*.dat
+
 \.idea/
 
 
