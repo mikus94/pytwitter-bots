@@ -19,9 +19,10 @@ DB_CONNECTION = ("""
 ################################################################################
 # fields that are required to DB table + its default values + parsing function
 ################################################################################
-_FUNC_ID_ = lambda x: x if x else ""
-_FUNC_INT_ = lambda x: int(x) if x else 0
-_FUNC_DATE_ = lambda x: parse_time(x) if x else ""
+_FUNC_ID_ = lambda x: x
+_FUNC_STR_ = lambda x: x if x is not None else ""
+_FUNC_INT_ = lambda x: int(x)
+_FUNC_DATE_ = lambda x: parse_time(x)
 
 # tweets
 TT_TABLE = 'tweet'
@@ -32,10 +33,10 @@ TT_FIELDS = [
     ('retweeted', False, _FUNC_ID_),
     ('retweet_count', 0, _FUNC_INT_),
     ('favorite_count', 0, _FUNC_INT_),
-    ('lang', '', _FUNC_ID_),
+    ('lang', '', _FUNC_STR_),
     ('user_id', 0, _FUNC_INT_),
-    ('version', _TODAY, _FUNC_ID_),
-    ('place', '', _FUNC_ID_)
+    ('version', _TODAY, _FUNC_STR_),
+    ('place', '', _FUNC_STR_)
 ]
 
 # users
@@ -63,8 +64,8 @@ USR_DSC_TABLE = 'twitter_user_dsc'
 USR_DSC_FIELDS = [
     ('id', 0, _FUNC_INT_),
     ('description', '', _FUNC_ID_),
-    ('location', '', _FUNC_ID_),
-    ('lang', '', _FUNC_ID_),
+    ('location', '', _FUNC_STR_),
+    ('lang', '', _FUNC_STR_),
     ('version', _TODAY, _FUNC_ID_)
 ]
 

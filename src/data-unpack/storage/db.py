@@ -78,7 +78,6 @@ class DbHandler(metaclass=Singleton):
             print("Insertion failed due to")
             print(e)
             print(data)
-            exit()
 
     def execute_select(self, sql):
         """
