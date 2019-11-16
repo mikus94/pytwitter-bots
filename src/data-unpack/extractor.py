@@ -36,9 +36,8 @@ def main(path, opts):
     if option == 'multi-gathered':
         # extracting multiple storage files with multiple jsons.
         # all_datas = os.listdir(path)
-        all_datas = glob.glob(path + '/*.dat')
-        for store in all_datas:
-            store_path = os.path.join(path, store)
+        all_datas = glob.glob(path + '/*.txt')
+        for store_path in all_datas:
             multiple_extraction(store_path, storage)
     elif option == 'varol':
         # extract varol dataset
@@ -105,7 +104,7 @@ def multiple_extraction(path, storage):
 
 
 def progress_print(counter, path, all_tweets_no):
-    if counter % 500 == 0:
+    if counter % 1000 == 0:
             print(
                 """From store \'{}\'\n
                 Already {} tweets out of {} handled."""
@@ -117,7 +116,7 @@ def usage():
     print(
         "Usage information.\n"
         "(*) We assume that Tweet jsons are gathered in single file with "
-        "'*.dat' extension.\n"
+        "'*.txt' extension.\n"
         "(*) Moreover single line contain single tweet.\n"
         "Execution:\n"
         "- to execute insertion file with many tweets use option '-p'.\n"

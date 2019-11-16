@@ -10,7 +10,7 @@ _TODAY = str(datetime.date.today())
 
 # configuration of connection to DB
 DB_CONNECTION = ("""
-    dbname='twitter'
+    dbname='europarlament2019'
     user='postgres'
     host='localhost'
     password='1234'

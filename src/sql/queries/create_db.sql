@@ -53,7 +53,7 @@ CREATE TABLE twitter_user_dsc (
     id                              bigint NOT NULL,
     description                     text,
     location                        text,
-    lang                            varchar(5),
+    lang                            varchar,
 
     version                         date NOT NULL,
     PRIMARY KEY (id, version)
@@ -76,7 +76,7 @@ CREATE TABLE tweet (
     -- # of times that tweet was added to favourites
     favorite_count                integer NOT NULL,
     -- lang of tweet
-    lang                            varchar(5),
+    lang                            varchar,
     -- id of user that posted the tweet
     user_id                         bigint NOT NULL,
     -- geo information of tweet posting
