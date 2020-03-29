@@ -85,7 +85,7 @@ def get_all_tweets():
                 FROM tweet
                 GROUP BY t
                 ) as E
-            WHERE E.t>'2018-10-05 00:00:00';
+            WHERE E.t>'2019-09-10 00:00:00';
         """
 
     xs, ys = get_data(sql)
@@ -329,7 +329,8 @@ def debate_users():
         KO_COLOR, KO_COLOR, KO_COLOR, KO_COLOR, KO_COLOR_SUPP, KO_COLOR,
         PIS_COLOR_SUPP, KO_COLOR, PIS_COLOR_SUPP, PIS_COLOR_SUPP
     ]
-    ax.barh(y_pos, ys, align='center', color=colors)
+    # ax.barh(y_pos, ys, align='center', color=colors)
+    ax.barh(y_pos, ys, align='center')
     ax.set_yticks(y_pos)
     ax.set_yticklabels(people)
     ax.invert_yaxis()  # labels read top-to-bottom
@@ -441,7 +442,8 @@ def most_tweets():
         KO_COLOR, PIS_COLOR_SUPP, PIS_COLOR_SUPP, PIS_COLOR_SUPP, KO_COLOR_SUPP,
         KO_COLOR, KO_COLOR_SUPP, KO_DELETED_COLOR, KO_COLOR, PIS_COLOR_SUPP
     ]
-    ax.barh(y_pos, ys, align='center', color=colors)
+    # ax.barh(y_pos, ys, align='center', color=colors)
+    ax.barh(y_pos, ys, align='center')
     ax.set_yticks(y_pos)
     ax.set_yticklabels(people)
     ax.invert_yaxis()  # labels read top-to-bottom
@@ -591,7 +593,8 @@ def most_hashes():
         JAKI_COLOR, TRZASK_COLOR, JAKI_COLOR, JAKI_COLOR, NEUTRAL_COLOR
     ]
 
-    ax.barh(y_pos, ys, align='center', color=colors)
+    # ax.barh(y_pos, ys, align='center', color=colors)
+    ax.barh(y_pos, ys, align='center')
     ax.set_yticks(y_pos)
     ax.set_yticklabels(tag)
     ax.invert_yaxis()  # labels read top-to-bottom
@@ -641,7 +644,8 @@ def most_mentions():
         PIS_COLOR, NEUTRAL_COLOR
     ]
 
-    ax.barh(y_pos, ys, align='center', color=colors)
+    # ax.barh(y_pos, ys, align='center', color=colors)
+    ax.barh(y_pos, ys, align='center')
     ax.set_yticks(y_pos)
     ax.set_yticklabels(person)
     ax.invert_yaxis()  # labels read top-to-bottom
@@ -671,11 +675,12 @@ def most_links():
 
     person, ys = get_data(sql)
     # skip m.in link
-    person = person[1:]
-    ys = ys[1:]
+    person = person
+    ys = ys
 
     # create figure/plot
     plt.rcdefaults()
+
     fig, ax = plt.subplots()
 
     # Example data
@@ -686,14 +691,34 @@ def most_links():
         PIS_COLOR, PIS_COLOR, PIS_COLOR, KO_COLOR, KO_COLOR_SUPP, NEUTRAL_COLOR,
         PIS_COLOR, NEUTRAL_COLOR
     ]
+   
 
-    ax.barh(y_pos, ys, align='center', color=colors)
+    # ax.barh(y_pos, ys, align='center', color=colors)
+    ax.barh(y_pos, ys, align='center')
     ax.set_yticks(y_pos)
     ax.set_yticklabels(person)
     ax.invert_yaxis()  # labels read top-to-bottom
     ax.set_xlabel('Liczba udostępnień linków.')
     ax.set_title('{} najczęściej linkowanych adresów.'.format(len(person)))
-    fig.set_size_inches(15, 12)
+
+    cells = []
+    for l, y in zip(person, ys):
+        cells.append([l, y])
+
+    print(person)
+    print(len(person))
+    print(ys)
+    print(len(ys))
+    print(cells)
+    print(len(cells))
+
+    ax.table(
+            cellText=cells,
+            colLabels=["url", "#"]
+    )
+
+
+    fig.set_size_inches(25, 20)
 
     # save and quit
     figpath = os.path.join(PLOTS_DIR, 'most-links.png')
@@ -704,16 +729,16 @@ def most_links():
 
 if __name__ == '__main__':
     os.makedirs(PLOTS_DIR, exist_ok=True)
-    get_all_tweets()
-    debate_all()
-    debate_hash()
-    debate_users()
-    split_tweets()
-    most_tweets()
-    tweets_stats()
-    candidates()
-    debate_together()
-    most_hashes()
-    most_mentions()
+    # get_all_tweets()
+    # debate_all()
+    # debate_hash()
+    # debate_users()
+    # split_tweets()
+    # most_tweets()
+    # tweets_stats()
+    # candidates()
+    # debate_together()
+    # most_hashes()
+    # most_mentions()
     most_links()
 
